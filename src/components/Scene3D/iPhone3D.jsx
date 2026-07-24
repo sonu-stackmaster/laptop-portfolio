@@ -170,10 +170,10 @@ export default function IPhone3D({ isDark, onToggleTheme }) {
         position={[0, 0, 0.26]}
         distanceFactor={4.25}
         style={{
-          width: '280px',
-          height: '620px',
+          width: '320px',
+          height: '710px',
           background: isDark ? '#0b0718' : '#fffaf3',
-          borderRadius: '38px',
+          borderRadius: '44px',
           overflow: 'hidden'
         }}
       >
