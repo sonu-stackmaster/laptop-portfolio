@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
-  Sun, Moon, Volume2, VolumeX, Wifi, Battery, Sparkles, Terminal
+  Sun, Moon, Volume2, VolumeX, Wifi, Battery, Terminal
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
@@ -114,12 +114,20 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
           >
             {/* Top OS Status Bar */}
             <div className="w-full py-1.5 px-3 rounded-xl bg-slate-900/60 dark:bg-slate-900/60 light:bg-slate-200/80 backdrop-blur-md border border-purple-500/20 dark:border-purple-500/20 light:border-orange-400/30 flex items-center justify-between text-xs">
-              <div className="flex items-center space-x-3">
-                <span className="font-bold font-heading tracking-wider flex items-center gap-1 text-purple-400 dark:text-purple-400 light:text-orange-600">
-                  <Sparkles size={14} /> SONU.DEV
+              <div className="flex items-center space-x-2">
+                {/* Modern Developer Emblem Graphic SVG */}
+                <div className="w-5 h-5 rounded-md bg-gradient-to-tr from-purple-600 via-indigo-500 to-pink-500 flex items-center justify-center shadow-sm shrink-0">
+                  <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="16 18 22 12 16 6"></polyline>
+                    <polyline points="8 6 2 12 8 18"></polyline>
+                  </svg>
+                </div>
+                <span className="font-bold font-heading tracking-wide text-xs text-slate-100 dark:text-slate-100 light:text-slate-900">
+                  Sonu-Kapar
                 </span>
-                <span className="hidden sm:inline text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600">
-                  Full Stack Portfolio
+                <span className="text-slate-500/80 font-mono text-[11px]">|</span>
+                <span className="text-[11px] font-semibold text-purple-400 dark:text-purple-400 light:text-orange-600">
+                  Full Stack Developer
                 </span>
               </div>
 
@@ -153,20 +161,17 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
             </div>
 
             {/* Desktop Screen Main Content Area */}
-            <div className="flex-1 my-3 flex flex-col justify-center items-center text-center px-4">
+            <div className="flex-1 my-auto flex flex-col justify-center items-center text-center px-4">
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="max-w-md space-y-2 mb-5"
+                className="max-w-md space-y-2 mb-6"
               >
                 <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-slate-100 dark:text-slate-100 light:text-slate-900 tracking-tight">
                   Sonu Kumar Kapar
                 </h2>
                 <p className="text-xs text-slate-300 dark:text-slate-300 light:text-slate-700 leading-relaxed font-medium">
                   Senior Full Stack & AI Developer | 4+ Yrs Exp | 20+ Systems Delivered
-                </p>
-                <p className="text-[11px] text-purple-400 dark:text-purple-400 light:text-orange-600 font-mono pt-1">
-                  👇 Click an application icon to open floating card
                 </p>
               </motion.div>
 
@@ -204,15 +209,6 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
                   );
                 })}
               </div>
-            </div>
-
-            {/* Bottom Dock / OS Footer */}
-            <div className="w-full py-1 px-4 rounded-xl bg-slate-900/60 dark:bg-slate-900/60 light:bg-slate-200/80 backdrop-blur-md border border-purple-500/20 dark:border-purple-500/20 light:border-orange-400/30 flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600">
-              <span className="font-mono">STATUS: ONLINE</span>
-              <span className="font-mono text-purple-400 dark:text-purple-400 light:text-orange-600">
-                {openApps.length} CARD{openApps.length !== 1 ? 'S' : ''} ACTIVE
-              </span>
-              <span className="hidden sm:inline font-mono">GURUGRAM, IN</span>
             </div>
           </motion.div>
         )}
