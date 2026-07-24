@@ -45,10 +45,18 @@ const fixedCardPositions = {
   notes: "top-12 right-16"
 };
 
-export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
+export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onToggleTheme }) {
   const containerRef = useRef(null);
   const [cardZIndexes, setCardZIndexes] = useState({});
+  const [isMuted, setIsMuted] = useState(false);
   const highestZIndex = useRef(50);
+
+  const handleToggleSound = () => {
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+    soundFx.setMuted(nextMuted);
+    if (!nextMuted) soundFx.playKeyClick();
+  };
 
   const bringToFront = (appId) => {
     highestZIndex.current += 1;
@@ -138,7 +146,12 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
 
               {/* Card Content Body */}
               <div className="p-3.5 sm:p-4 overflow-y-auto max-h-[calc(78vh-55px)]">
-                <Component isDark={isDark} />
+                <Component
+                  isDark={isDark}
+                  onToggleTheme={onToggleTheme}
+                  isMuted={isMuted}
+                  onToggleSound={handleToggleSound}
+                />
               </div>
             </motion.div>
           );

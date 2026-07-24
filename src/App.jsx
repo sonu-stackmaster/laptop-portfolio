@@ -69,6 +69,7 @@ export default function App() {
           openApps={openApps}
           onCloseApp={handleCloseApp}
           isDark={isDark}
+          onToggleTheme={handleToggleTheme}
         />
       )}
     </main>
