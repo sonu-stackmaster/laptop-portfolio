@@ -22,16 +22,26 @@ export default function ResumeCard({ isDark }) {
   return (
     <div className="space-y-4">
       {/* Action Bar */}
-      <div className="flex items-center justify-between p-3 rounded-xl bg-purple-950/40 dark:bg-purple-950/40 light:bg-orange-100/60 border border-purple-500/20 dark:border-purple-500/20 light:border-orange-300/40">
+      <div className={`flex items-center justify-between p-3 rounded-xl border ${
+        isDark 
+          ? 'bg-purple-950/40 border-purple-500/20' 
+          : 'bg-orange-50/90 border-orange-200 shadow-sm'
+      }`}>
         <div className="flex items-center space-x-3">
-          <div className="p-2 rounded-lg bg-purple-600 dark:bg-purple-600 light:bg-orange-500 text-white">
+          <div className={`p-2 rounded-lg text-white ${
+            isDark ? 'bg-purple-600' : 'bg-orange-500'
+          }`}>
             <FileText size={20} />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-slate-100 dark:text-slate-100 light:text-slate-900 font-heading">
+            <h3 className={`text-sm font-bold font-heading ${
+              isDark ? 'text-slate-100' : 'text-slate-900'
+            }`}>
               docs/Sonu-CV.pdf
             </h3>
-            <p className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600">
+            <p className={`text-xs ${
+              isDark ? 'text-slate-400' : 'text-slate-600 font-medium'
+            }`}>
               Verified Senior Developer Resume
             </p>
           </div>
@@ -42,14 +52,22 @@ export default function ResumeCard({ isDark }) {
             href="/docs/Sonu-CV.pdf"
             target="_blank"
             rel="noreferrer"
-            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 dark:bg-slate-800 light:bg-slate-200 text-slate-200 dark:text-slate-200 light:text-slate-800 hover:bg-slate-700 transition-all flex items-center gap-1.5"
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+              isDark 
+                ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' 
+                : 'bg-white text-slate-900 border border-orange-300 hover:bg-orange-100/60 shadow-xs'
+            }`}
           >
             <Eye size={14} />
             <span>Open PDF</span>
           </a>
           <button
             onClick={handleDownload}
-            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-600 dark:to-indigo-600 light:from-orange-500 light:to-amber-500 text-white shadow-md hover:scale-105 transition-all flex items-center gap-1.5"
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-md hover:scale-105 transition-all flex items-center gap-1.5 ${
+              isDark 
+                ? 'bg-gradient-to-r from-purple-600 to-indigo-600' 
+                : 'bg-gradient-to-r from-orange-500 to-amber-500'
+            }`}
           >
             <Download size={14} />
             <span>Download</span>
@@ -58,7 +76,11 @@ export default function ResumeCard({ isDark }) {
       </div>
 
       {/* PDF Embedded Preview Frame */}
-      <div className="w-full h-[280px] rounded-xl overflow-hidden border border-purple-500/20 dark:border-purple-500/20 light:border-orange-300/40 bg-slate-900/80">
+      <div className={`w-full h-[280px] rounded-xl overflow-hidden border ${
+        isDark 
+          ? 'border-purple-500/20 bg-slate-900/80' 
+          : 'border-orange-200 bg-white shadow-inner'
+      }`}>
         <iframe 
           src="/docs/Sonu-CV.pdf#toolbar=0&navpanes=0&scrollbar=0"
           className="w-full h-full"

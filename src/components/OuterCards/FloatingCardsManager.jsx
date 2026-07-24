@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail, Sparkles } from 'lucide-react';
+import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
 import AboutCard from './AboutCard';
@@ -39,7 +39,7 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
 
           const { title, icon: Icon, Component } = config;
 
-          // Compute docking slot (loops through available top/left/right positions)
+          // Compute docking slot
           const posClass = dockingPositions[index % dockingPositions.length];
 
           const handleClose = () => {
@@ -59,20 +59,26 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
               } ${posClass} transition-colors duration-500 z-40`}
             >
               {/* Card Header Bar */}
-              <div className="flex items-center justify-between p-3.5 border-b border-purple-500/20 dark:border-purple-500/20 light:border-orange-500/20 cursor-move select-none">
+              <div className={`flex items-center justify-between p-3.5 cursor-move select-none border-b ${
+                isDark ? 'border-purple-500/20' : 'border-orange-200'
+              }`}>
                 <div className="flex items-center space-x-2.5">
                   <div className={`p-2 rounded-xl ${
                     isDark 
                       ? 'bg-purple-600/30 text-purple-300 border border-purple-500/30' 
-                      : 'bg-orange-500/20 text-orange-600 border border-orange-400/30'
+                      : 'bg-orange-500/20 text-orange-600 border border-orange-400/40'
                   }`}>
                     <Icon size={18} />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-slate-100 dark:text-slate-100 light:text-slate-900 font-heading">
+                    <h3 className={`text-sm font-extrabold font-heading ${
+                      isDark ? 'text-slate-100' : 'text-slate-900'
+                    }`}>
                       {title}
                     </h3>
-                    <span className="text-[10px] font-mono text-purple-400 dark:text-purple-400 light:text-orange-600 uppercase tracking-widest">
+                    <span className={`text-[10px] font-mono uppercase tracking-widest ${
+                      isDark ? 'text-purple-400' : 'text-orange-600 font-bold'
+                    }`}>
                       PORTFOLIO CARD
                     </span>
                   </div>
@@ -81,7 +87,11 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={handleClose}
-                    className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-white dark:hover:text-white light:hover:text-slate-900 hover:bg-rose-500/20 hover:border hover:border-rose-500/40 transition-all"
+                    className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
+                      isDark 
+                        ? 'text-slate-400 hover:text-white hover:bg-rose-500/20 hover:border hover:border-rose-500/40' 
+                        : 'text-slate-500 hover:text-slate-900 hover:bg-rose-100 hover:border hover:border-rose-300'
+                    }`}
                     title="Close Window"
                   >
                     <X size={16} />

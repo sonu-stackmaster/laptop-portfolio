@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, Calendar, MapPin, CheckCircle2 } from 'lucide-react';
+import { Briefcase, Calendar, CheckCircle2 } from 'lucide-react';
 import { portfolioData } from '../../data/portfolioData';
 
 export default function ExperienceCard({ isDark }) {
@@ -10,28 +10,44 @@ export default function ExperienceCard({ isDark }) {
       {experience.map((exp, idx) => (
         <div 
           key={idx}
-          className="p-4 rounded-xl bg-purple-950/30 dark:bg-purple-950/30 light:bg-orange-50/80 border border-purple-500/20 dark:border-purple-500/20 light:border-orange-300/40 space-y-2 relative"
+          className={`p-4 rounded-xl border space-y-2 relative ${
+            isDark 
+              ? 'bg-purple-950/30 border-purple-500/20' 
+              : 'bg-orange-50/90 border-orange-200 shadow-sm'
+          }`}
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div>
-              <h3 className="text-base font-bold text-slate-100 dark:text-slate-100 light:text-slate-900 font-heading">
+              <h3 className={`text-base font-extrabold font-heading ${
+                isDark ? 'text-slate-100' : 'text-slate-900'
+              }`}>
                 {exp.role}
               </h3>
-              <div className="text-xs font-semibold text-purple-400 dark:text-purple-400 light:text-orange-600 flex items-center gap-1.5 mt-0.5">
+              <div className={`text-xs font-bold flex items-center gap-1.5 mt-0.5 ${
+                isDark ? 'text-purple-400' : 'text-orange-600'
+              }`}>
                 <Briefcase size={13} />
                 <span>{exp.company}</span>
               </div>
             </div>
-            <div className="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 flex items-center gap-1">
+            <div className={`text-xs flex items-center gap-1 font-medium ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}>
               <Calendar size={12} />
               <span>{exp.period}</span>
             </div>
           </div>
 
-          <ul className="space-y-1.5 pt-2 border-t border-purple-500/15 dark:border-purple-500/15 light:border-orange-200">
+          <ul className={`space-y-1.5 pt-2 border-t ${
+            isDark ? 'border-purple-500/15' : 'border-orange-200'
+          }`}>
             {exp.achievements.map((ach, i) => (
-              <li key={i} className="flex items-start space-x-2 text-xs text-slate-300 dark:text-slate-300 light:text-slate-700 leading-relaxed">
-                <CheckCircle2 size={13} className="text-purple-400 dark:text-purple-400 light:text-orange-500 shrink-0 mt-0.5" />
+              <li key={i} className={`flex items-start space-x-2 text-xs leading-relaxed font-medium ${
+                isDark ? 'text-slate-300' : 'text-slate-800'
+              }`}>
+                <CheckCircle2 size={13} className={`shrink-0 mt-0.5 ${
+                  isDark ? 'text-purple-400' : 'text-orange-600'
+                }`} />
                 <span>{ach}</span>
               </li>
             ))}

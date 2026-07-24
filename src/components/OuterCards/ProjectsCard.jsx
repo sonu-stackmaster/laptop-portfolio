@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, Layers, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
+import { ExternalLink, Sparkles, CheckCircle2 } from 'lucide-react';
 import { portfolioData } from '../../data/portfolioData';
 
 export default function ProjectsCard({ isDark }) {
@@ -11,15 +11,21 @@ export default function ProjectsCard({ isDark }) {
   return (
     <div className="space-y-4">
       {/* Project Selector Tabs */}
-      <div className="flex space-x-2 border-b border-purple-500/20 dark:border-purple-500/20 light:border-orange-500/20 pb-2 overflow-x-auto">
+      <div className={`flex space-x-2 pb-2 overflow-x-auto border-b ${
+        isDark ? 'border-purple-500/20' : 'border-orange-200'
+      }`}>
         {projects.map((proj, idx) => (
           <button
             key={idx}
             onClick={() => setSelectedProject(idx)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
               selectedProject === idx
-                ? 'bg-purple-600 dark:bg-purple-600 light:bg-orange-500 text-white shadow-md'
-                : 'text-slate-400 dark:text-slate-400 light:text-slate-700 hover:text-white'
+                ? isDark
+                  ? 'bg-purple-600 text-white shadow-md'
+                  : 'bg-orange-500 text-white shadow-md'
+                : isDark
+                  ? 'text-slate-400 hover:text-white'
+                  : 'text-slate-700 hover:text-slate-900 hover:bg-orange-100/60'
             }`}
           >
             {proj.title}
@@ -28,14 +34,22 @@ export default function ProjectsCard({ isDark }) {
       </div>
 
       {/* Selected Project Main Details */}
-      <div className="p-4 rounded-xl bg-purple-950/30 dark:bg-purple-950/30 light:bg-orange-50/80 border border-purple-500/20 dark:border-purple-500/20 light:border-orange-300/40 space-y-3">
+      <div className={`p-4 rounded-xl border space-y-3 ${
+        isDark 
+          ? 'bg-purple-950/30 border-purple-500/20' 
+          : 'bg-orange-50/90 border-orange-200 shadow-sm'
+      }`}>
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="text-lg font-bold text-slate-100 dark:text-slate-100 light:text-slate-900 font-heading flex items-center gap-2">
+            <h3 className={`text-lg font-bold font-heading flex items-center gap-2 ${
+              isDark ? 'text-slate-100' : 'text-slate-900'
+            }`}>
               {activeProj.title}
-              <Sparkles size={16} className="text-purple-400 dark:text-purple-400 light:text-orange-500" />
+              <Sparkles size={16} className={isDark ? "text-purple-400" : "text-orange-500"} />
             </h3>
-            <p className="text-xs text-slate-300 dark:text-slate-300 light:text-slate-700 mt-1 leading-relaxed">
+            <p className={`text-xs mt-1 leading-relaxed ${
+              isDark ? 'text-slate-300' : 'text-slate-800 font-medium'
+            }`}>
               {activeProj.description}
             </p>
           </div>
@@ -44,7 +58,11 @@ export default function ProjectsCard({ isDark }) {
               href={activeProj.url}
               target="_blank"
               rel="noreferrer"
-              className="p-2 rounded-lg bg-purple-600/20 dark:bg-purple-600/20 light:bg-orange-500/20 text-purple-300 dark:text-purple-300 light:text-orange-600 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 light:hover:bg-orange-500 transition-all"
+              className={`p-2 rounded-lg transition-all ${
+                isDark 
+                  ? 'bg-purple-600/20 text-purple-300 hover:bg-purple-600 hover:text-white' 
+                  : 'bg-orange-500/20 text-orange-700 hover:bg-orange-500 hover:text-white'
+              }`}
               title="Visit Live Application"
             >
               <ExternalLink size={16} />
@@ -53,13 +71,19 @@ export default function ProjectsCard({ isDark }) {
         </div>
 
         {/* Impact Bullet Points */}
-        <div className="space-y-1.5 pt-2 border-t border-purple-500/15 dark:border-purple-500/15 light:border-orange-200">
-          <div className="text-[11px] font-semibold text-purple-400 dark:text-purple-400 light:text-orange-600 uppercase tracking-wider">
+        <div className={`space-y-1.5 pt-2 border-t ${
+          isDark ? 'border-purple-500/15' : 'border-orange-200'
+        }`}>
+          <div className={`text-[11px] font-bold uppercase tracking-wider ${
+            isDark ? 'text-purple-400' : 'text-orange-600'
+          }`}>
             Key Impact & Metrics
           </div>
           {activeProj.highlights.map((h, i) => (
-            <div key={i} className="flex items-center space-x-2 text-xs text-slate-300 dark:text-slate-300 light:text-slate-800">
-              <CheckCircle2 size={13} className="text-emerald-400 shrink-0" />
+            <div key={i} className={`flex items-center space-x-2 text-xs font-medium ${
+              isDark ? 'text-slate-300' : 'text-slate-800'
+            }`}>
+              <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
               <span>{h}</span>
             </div>
           ))}
@@ -67,14 +91,20 @@ export default function ProjectsCard({ isDark }) {
 
         {/* Tech Stack Tags */}
         <div className="pt-2">
-          <div className="text-[11px] font-semibold text-slate-400 dark:text-slate-400 light:text-slate-600 mb-1.5">
+          <div className={`text-[11px] font-semibold mb-1.5 ${
+            isDark ? 'text-slate-400' : 'text-slate-700'
+          }`}>
             Technologies Used:
           </div>
           <div className="flex flex-wrap gap-1.5">
             {activeProj.tags.map((tag, i) => (
               <span 
                 key={i} 
-                className="px-2 py-0.5 text-[10px] font-mono font-medium rounded-md bg-purple-500/10 dark:bg-purple-500/10 light:bg-orange-500/10 text-purple-300 dark:text-purple-300 light:text-orange-700 border border-purple-500/20 dark:border-purple-500/20 light:border-orange-300/40"
+                className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded-md border ${
+                  isDark 
+                    ? 'bg-purple-500/10 text-purple-300 border-purple-500/20' 
+                    : 'bg-orange-100 text-orange-900 border-orange-300/60'
+                }`}
               >
                 {tag}
               </span>
