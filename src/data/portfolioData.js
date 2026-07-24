@@ -4,10 +4,10 @@ export const portfolioData = {
     title: "Senior Full Stack & AI Developer",
     experienceYears: "4+",
     location: "Gurugram, India",
-    email: "sonkum8640@gmail.com",
-    phone: "+91-9899237236",
+    email: "kpr8640@gmail.com",
+    phone: "+91-9599138388",
     github: "https://github.com/sonu-stackmaster",
-    leetcode: "https://leetcode.com/sk0611",
+    linkedin: "https://linkedin.com/in/sk0611",
     avatarUrl: "https://res.cloudinary.com/dqbph8yb8/image/upload/v1784908138/sonu-portrait_hcg9rh.jpg",
     summary: "Senior Full Stack Developer with 4+ years of experience designing and delivering scalable cloud-native and AI-powered applications. Proven track record of building production systems end-to-end, optimizing performance, and deploying LLM-based solutions at scale.",
     stats: [

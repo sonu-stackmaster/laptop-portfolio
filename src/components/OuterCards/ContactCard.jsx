@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, Github, Code, Copy, Check, Send, Sparkles } from 'lucide-react';
+import { Mail, Phone, Github, Linkedin, Copy, Check, Send, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { portfolioData } from '../../data/portfolioData';
 
@@ -18,6 +18,11 @@ export default function ContactCard({ isDark }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.email || !formData.message) return;
+
+    // Launch mailto client directed to kpr8640@gmail.com
+    const subject = encodeURIComponent(`Portfolio Inquiry from ${formData.name || 'Visitor'}`);
+    const body = encodeURIComponent(`Hi Sonu,\n\n${formData.message}\n\nFrom: ${formData.name} (${formData.email})`);
+    window.open(`mailto:${personalInfo.email}?subject=${subject}&body=${body}`, '_blank');
 
     setMessageSent(true);
     confetti({
@@ -53,9 +58,14 @@ export default function ContactCard({ isDark }) {
               <div className={`text-[10px] uppercase font-bold ${
                 isDark ? 'text-slate-400' : 'text-slate-600'
               }`}>Email</div>
-              <div className={`text-xs font-mono font-bold truncate ${
-                isDark ? 'text-slate-200' : 'text-slate-900'
-              }`}>{personalInfo.email}</div>
+              <a 
+                href={`mailto:${personalInfo.email}`}
+                className={`text-xs font-mono font-bold truncate block hover:underline ${
+                  isDark ? 'text-slate-200 hover:text-purple-400' : 'text-slate-900 hover:text-orange-600'
+                }`}
+              >
+                {personalInfo.email}
+              </a>
             </div>
           </div>
           <button
@@ -85,9 +95,14 @@ export default function ContactCard({ isDark }) {
               <div className={`text-[10px] uppercase font-bold ${
                 isDark ? 'text-slate-400' : 'text-slate-600'
               }`}>Phone</div>
-              <div className={`text-xs font-mono font-bold truncate ${
-                isDark ? 'text-slate-200' : 'text-slate-900'
-              }`}>{personalInfo.phone}</div>
+              <a 
+                href={`tel:${personalInfo.phone}`}
+                className={`text-xs font-mono font-bold truncate block hover:underline ${
+                  isDark ? 'text-slate-200 hover:text-purple-400' : 'text-slate-900 hover:text-orange-600'
+                }`}
+              >
+                {personalInfo.phone}
+              </a>
             </div>
           </div>
           <button
@@ -102,7 +117,7 @@ export default function ContactCard({ isDark }) {
         </div>
       </div>
 
-      {/* Social Profiles */}
+      {/* Social Profiles: GitHub & LinkedIn */}
       <div className="flex space-x-2">
         <a
           href={personalInfo.github}
@@ -110,25 +125,25 @@ export default function ContactCard({ isDark }) {
           rel="noreferrer"
           className={`flex-1 p-2 rounded-xl border flex items-center justify-center space-x-2 text-xs font-bold transition-all ${
             isDark 
-              ? 'bg-slate-900/60 border-purple-500/20 text-slate-200 hover:border-purple-500' 
-              : 'bg-white border-orange-200 text-slate-900 hover:bg-orange-50 shadow-sm'
+              ? 'bg-slate-900/60 border-purple-500/20 text-slate-200 hover:border-purple-500 hover:text-purple-300' 
+              : 'bg-white border-orange-200 text-slate-900 hover:bg-orange-50 hover:text-orange-600 shadow-sm'
           }`}
         >
           <Github size={15} />
           <span>GitHub</span>
         </a>
         <a
-          href={personalInfo.leetcode}
+          href={personalInfo.linkedin}
           target="_blank"
           rel="noreferrer"
           className={`flex-1 p-2 rounded-xl border flex items-center justify-center space-x-2 text-xs font-bold transition-all ${
             isDark 
-              ? 'bg-slate-900/60 border-purple-500/20 text-slate-200 hover:border-purple-500' 
-              : 'bg-white border-orange-200 text-slate-900 hover:bg-orange-50 shadow-sm'
+              ? 'bg-slate-900/60 border-purple-500/20 text-slate-200 hover:border-purple-500 hover:text-purple-300' 
+              : 'bg-white border-orange-200 text-slate-900 hover:bg-orange-50 hover:text-orange-600 shadow-sm'
           }`}
         >
-          <Code size={15} />
-          <span>LeetCode</span>
+          <Linkedin size={15} />
+          <span>LinkedIn</span>
         </a>
       </div>
 
@@ -144,7 +159,7 @@ export default function ContactCard({ isDark }) {
 
         {messageSent ? (
           <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold text-center">
-            ✨ Thank you! Message dispatched successfully to Sonu.
+            ✨ Mail client opened! Message sent to kpr8640@gmail.com.
           </div>
         ) : (
           <>
