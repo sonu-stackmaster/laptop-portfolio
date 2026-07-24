@@ -174,12 +174,6 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp }
           <meshStandardMaterial color="#050608" roughness={0.1} metalness={0.9} />
         </mesh>
 
-        {/* Webcam Lens Dot */}
-        <mesh position={[0, 6.5, 0.11]}>
-          <circleGeometry args={[0.06, 16]} />
-          <meshBasicMaterial color="#1e293b" />
-        </mesh>
-
         {/* 4. DREI HTML SCREEN DISPLAY */}
         <Html
           transform
@@ -201,6 +195,42 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp }
             onOpenApp={onOpenApp}
           />
         </Html>
+
+        {/* PROMINENT HIGH-VISIBILITY MACBOOK CAMERA NOTCH ASSEMBLY (Positioned on top bezel at z=0.21) */}
+        <group position={[0, 6.6, 0.21]}>
+          {/* Camera Notch Cutout Block */}
+          <mesh position={[0, 0, 0]}>
+            <boxGeometry args={[1.2, 0.24, 0.05]} />
+            <meshStandardMaterial color="#000000" roughness={0.1} metalness={0.95} />
+          </mesh>
+
+          {/* Chrome Metallic Camera Rim */}
+          <mesh position={[0, 0, 0.03]}>
+            <ringGeometry args={[0.07, 0.10, 32]} />
+            <meshStandardMaterial color="#94a3b8" roughness={0.1} metalness={1.0} />
+          </mesh>
+
+          {/* Glossy Dark Camera Lens */}
+          <mesh position={[0, 0, 0.031]}>
+            <circleGeometry args={[0.07, 32]} />
+            <meshStandardMaterial color="#020617" roughness={0.05} metalness={0.95} />
+          </mesh>
+
+          {/* High-Contrast Reflective Glass Glint Dot */}
+          <mesh position={[-0.02, 0.02, 0.032]}>
+            <circleGeometry args={[0.025, 16]} />
+            <meshBasicMaterial color="#38bdf8" />
+          </mesh>
+
+          {/* Glowing Green Camera Active Indicator LED Light */}
+          <mesh position={[0.26, 0, 0.031]}>
+            <circleGeometry args={[0.03, 16]} />
+            <meshBasicMaterial color="#22c55e" />
+          </mesh>
+
+          {/* Small Green LED Light Glow */}
+          <pointLight position={[0.26, 0, 0.05]} intensity={0.4} color="#22c55e" distance={0.6} />
+        </group>
 
         {/* Ambient Backlight Radiating from Behind the Screen */}
         <pointLight 
