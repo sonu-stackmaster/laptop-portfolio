@@ -157,19 +157,15 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
               <motion.div
                 initial={{ y: 10, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                className="max-w-md space-y-2 mb-4"
+                className="max-w-md space-y-2 mb-5"
               >
-                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-purple-500/10 dark:bg-purple-500/10 light:bg-orange-500/10 border border-purple-500/30 dark:border-purple-500/30 light:border-orange-400/40 text-[11px] font-mono text-purple-300 dark:text-purple-300 light:text-orange-700">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                  <span>Interactive 3D Portfolio OS</span>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-extrabold font-heading text-slate-100 dark:text-slate-100 light:text-slate-900 tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-extrabold font-heading text-slate-100 dark:text-slate-100 light:text-slate-900 tracking-tight">
                   Sonu Kumar Kapar
                 </h2>
                 <p className="text-xs text-slate-300 dark:text-slate-300 light:text-slate-700 leading-relaxed font-medium">
                   Senior Full Stack & AI Developer | 4+ Yrs Exp | 20+ Systems Delivered
                 </p>
-                <p className="text-[11px] text-purple-400 dark:text-purple-400 light:text-orange-600 font-mono">
+                <p className="text-[11px] text-purple-400 dark:text-purple-400 light:text-orange-600 font-mono pt-1">
                   👇 Click an application icon to open floating card
                 </p>
               </motion.div>

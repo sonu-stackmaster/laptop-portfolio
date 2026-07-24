@@ -27,7 +27,7 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
         />
       </div>
 
-      {/* 3D Canvas Stage (Centering camera target directly at the midpoint of laptop screen & keyboard [0, 2.2, 0]) */}
+      {/* 3D Canvas Stage */}
       <Canvas className="w-full h-full relative z-10">
         <PerspectiveCamera makeDefault position={[0, 2.2, 13]} fov={38} />
         
@@ -45,7 +45,7 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
           onOpenApp={onOpenApp}
         />
 
-        {/* Orbit Controls (Center of rotation at midpoint [0, 2.2, 0]) */}
+        {/* Orbit Controls */}
         <OrbitControls
           target={[0, 2.2, 0]}
           enableZoom={true}
@@ -59,13 +59,6 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
           rotateSpeed={0.6}
         />
       </Canvas>
-
-      {/* Helper Tip Overlay */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 pointer-events-none z-20 text-center">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900/70 border border-purple-500/30 text-[11px] font-mono text-purple-300 backdrop-blur-md">
-          <span>🖱️ Drag mouse to orbit 3D MacBook • Click icons on screen to launch apps</span>
-        </div>
-      </div>
     </div>
   );
 }
