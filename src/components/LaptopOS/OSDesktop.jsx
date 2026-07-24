@@ -93,7 +93,7 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
             </motion.div>
 
             <h1 className="text-xl font-bold font-heading tracking-wide mb-1">
-              SONU<span className={isDark ? "text-purple-400" : "text-orange-600"}>OS</span> v4.2
+              SONU<span className={isDark ? "text-purple-400" : "text-orange-600"}>OS</span> v4.3
             </h1>
             <p className={`text-xs mb-6 font-mono ${isDark ? 'text-purple-300/80' : 'text-slate-600'}`}>
               Loading....

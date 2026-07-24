@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
-  Sun, Moon, Volume2, VolumeX, Wifi, Battery, ChevronLeft, Terminal
+  Sun, Moon, Volume2, VolumeX, Wifi, Battery, ChevronLeft, Terminal,
+  Phone, Compass, Sliders, Music, Notebook
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
@@ -13,14 +14,34 @@ import ExperienceMobileCard from '../MobileCards/ExperienceMobileCard';
 import ResumeMobileCard from '../MobileCards/ResumeMobileCard';
 import ContactMobileCard from '../MobileCards/ContactMobileCard';
 
-const appIcons = [
+import PhoneMobileApp from '../MobileCards/PhoneMobileApp';
+import SafariMobileApp from '../MobileCards/SafariMobileApp';
+import SettingsMobileApp from '../MobileCards/SettingsMobileApp';
+import MusicMobileApp from '../MobileCards/MusicMobileApp';
+import TerminalMobileApp from '../MobileCards/TerminalMobileApp';
+import NotesMobileApp from '../MobileCards/NotesMobileApp';
+
+// Grid apps (Portfolio Section Apps & Dev Tools)
+const gridAppIcons = [
   { id: 'about', label: 'About Me', icon: User, color: 'from-purple-500 to-indigo-600', lightColor: 'from-purple-600 to-indigo-700', Component: AboutMobileCard },
   { id: 'skills', label: 'Skills', icon: Code2, color: 'from-blue-500 to-cyan-600', lightColor: 'from-blue-600 to-cyan-700', Component: SkillsMobileCard },
   { id: 'projects', label: 'Projects', icon: FolderGit2, color: 'from-emerald-500 to-teal-600', lightColor: 'from-emerald-600 to-teal-700', Component: ProjectsMobileCard },
   { id: 'experience', label: 'Experience', icon: Briefcase, color: 'from-amber-500 to-orange-600', lightColor: 'from-amber-600 to-orange-700', Component: ExperienceMobileCard },
   { id: 'resume', label: 'Resume', icon: FileText, color: 'from-rose-500 to-pink-600', lightColor: 'from-rose-600 to-pink-700', Component: ResumeMobileCard },
-  { id: 'contact', label: 'Contact', icon: Mail, color: 'from-violet-500 to-purple-700', lightColor: 'from-violet-600 to-purple-800', Component: ContactMobileCard }
+  { id: 'contact', label: 'Contact', icon: Mail, color: 'from-violet-500 to-purple-700', lightColor: 'from-violet-600 to-purple-800', Component: ContactMobileCard },
+  { id: 'terminal', label: 'Terminal', icon: Terminal, color: 'from-gray-700 to-slate-900', lightColor: 'from-slate-800 to-zinc-900', Component: TerminalMobileApp },
+  { id: 'notes', label: 'Notes', icon: Notebook, color: 'from-amber-500 to-yellow-600', lightColor: 'from-amber-600 to-yellow-700', Component: NotesMobileApp }
 ];
+
+// Bottom Dock Apps (4 Unique Native iOS Utility Apps)
+const dockAppIcons = [
+  { id: 'phone', label: 'Phone', icon: Phone, color: 'from-emerald-500 to-green-600', lightColor: 'from-emerald-600 to-green-700', Component: PhoneMobileApp },
+  { id: 'safari', label: 'Safari', icon: Compass, color: 'from-blue-500 to-sky-600', lightColor: 'from-blue-600 to-sky-700', Component: SafariMobileApp },
+  { id: 'settings', label: 'Settings', icon: Sliders, color: 'from-slate-600 to-zinc-800', lightColor: 'from-slate-700 to-zinc-800', Component: SettingsMobileApp },
+  { id: 'music', label: 'Music', icon: Music, color: 'from-rose-500 to-pink-600', lightColor: 'from-rose-600 to-pink-700', Component: MusicMobileApp }
+];
+
+const allApps = [...gridAppIcons, ...dockAppIcons];
 
 export default function MobileOSDesktop({ isDark, onToggleTheme }) {
   const [booted, setBooted] = useState(false);
@@ -75,8 +96,8 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
     if (!nextMuted) soundFx.playKeyClick();
   };
 
-  const ActiveComponent = activeApp ? appIcons.find(a => a.id === activeApp)?.Component : null;
-  const activeAppMeta = activeApp ? appIcons.find(a => a.id === activeApp) : null;
+  const ActiveComponent = activeApp ? allApps.find(a => a.id === activeApp)?.Component : null;
+  const activeAppMeta = activeApp ? allApps.find(a => a.id === activeApp) : null;
 
   return (
     <div className={`w-full h-full relative overflow-hidden select-none font-sans flex flex-col transition-colors duration-500 ${
@@ -126,7 +147,7 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
               <Terminal size={26} className="text-white animate-pulse" />
             </div>
             <h1 className="text-lg font-extrabold font-heading mb-1">
-              Sonu<span className={isDark ? "text-purple-400" : "text-orange-600"}>OS</span> Mobile
+              Sonu<span className={isDark ? "text-purple-400" : "text-orange-600"}>OS</span> v4.3
             </h1>
             <p className={`text-[11px] font-mono mb-4 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
               Loading....
@@ -185,8 +206,13 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
             </div>
 
             {/* App Content Scrollable Container */}
-            <div className="flex-1 overflow-y-auto p-3.5 space-y-4">
-              <ActiveComponent isDark={isDark} />
+            <div className="flex-1 flex flex-col overflow-y-auto p-3.5 space-y-4">
+              <ActiveComponent 
+                isDark={isDark} 
+                onToggleTheme={onToggleTheme} 
+                isMuted={isMuted} 
+                onToggleSound={toggleSound} 
+              />
             </div>
 
             {/* Bottom iOS Home Indicator Bar */}
@@ -219,9 +245,9 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
               </p>
             </div>
 
-            {/* App Grid */}
-            <div className="grid grid-cols-3 gap-4 my-auto px-2">
-              {appIcons.map((app) => {
+            {/* App Grid (4 cols / 2 rows = 8 apps) */}
+            <div className="grid grid-cols-4 gap-3 my-auto px-1">
+              {gridAppIcons.map((app) => {
                 const Icon = app.icon;
                 return (
                   <motion.button
@@ -231,12 +257,12 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
                     onClick={() => handleOpenApp(app.id)}
                     className="flex flex-col items-center group"
                   >
-                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-tr ${
+                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${
                       isDark ? app.color : (app.lightColor || app.color)
-                    } flex items-center justify-center text-white shadow-xl mb-1.5`}>
-                      <Icon size={26} />
+                    } flex items-center justify-center text-white shadow-xl mb-1`}>
+                      <Icon size={22} />
                     </div>
-                    <span className={`text-[11px] font-bold tracking-wide ${
+                    <span className={`text-[10px] font-bold tracking-wide truncate max-w-[60px] ${
                       isDark ? 'text-slate-200' : 'text-slate-900'
                     }`}>
                       {app.label}
@@ -246,13 +272,13 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
               })}
             </div>
 
-            {/* Bottom iOS Dock */}
+            {/* Bottom iOS Dock (4 Unique Native Apps: Phone, Safari, Settings, Music) */}
             <div className={`p-2.5 rounded-3xl backdrop-blur-xl border flex justify-around items-center ${
               isDark 
                 ? 'bg-slate-900/70 border-white/10 shadow-2xl' 
                 : 'bg-white/90 border-orange-200 shadow-xl'
             }`}>
-              {appIcons.slice(0, 4).map((app) => {
+              {dockAppIcons.map((app) => {
                 const Icon = app.icon;
                 return (
                   <button
@@ -261,6 +287,7 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
                     className={`w-11 h-11 rounded-2xl bg-gradient-to-tr ${
                       isDark ? app.color : app.lightColor
                     } flex items-center justify-center text-white shadow-md active:scale-90 transition-transform`}
+                    title={app.label}
                   >
                     <Icon size={20} />
                   </button>
