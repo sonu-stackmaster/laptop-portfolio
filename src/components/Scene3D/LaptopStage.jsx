@@ -3,8 +3,13 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import MacBook3D from './MacBook3D';
 import IPhone3D from './iPhone3D';
+import IPad3D from './iPad3D';
 
-export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp, isMobile }) {
+export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp, onCloseApp, isMobile, isTablet, isDesktop }) {
+  const cameraPos = isMobile ? [0, 0, 9.5] : isTablet ? [0, 0.5, 11] : [0, 2.2, 13];
+  const cameraFov = isMobile ? 42 : isTablet ? 40 : 38;
+  const targetPos = isMobile ? [0, 0, 0] : isTablet ? [0, 0, 0] : [0, 2.2, 0];
+
   return (
     <div className="relative w-full h-screen overflow-hidden select-none flex items-center justify-center">
       {/* Dynamic Ambient Background Backlight */}
@@ -32,8 +37,8 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
       <Canvas className="w-full h-full relative z-10">
         <PerspectiveCamera 
           makeDefault 
-          position={isMobile ? [0, 0, 9.5] : [0, 2.2, 13]} 
-          fov={isMobile ? 42 : 38} 
+          position={cameraPos} 
+          fov={cameraFov} 
         />
         
         {/* Lighting Setup */}
@@ -42,11 +47,19 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
         <directionalLight position={[-5, 5, -5]} intensity={isDark ? 0.8 : 1.0} color={isDark ? "#8b5cf6" : "#f97316"} />
         <pointLight position={[0, 4, 4]} intensity={isDark ? 1.2 : 0.8} color="#ffffff" />
 
-        {/* Render 3D Model: iPhone 15 Pro for Mobile, MacBook Pro for Desktop */}
+        {/* Render 3D Device Model */}
         {isMobile ? (
           <IPhone3D
             isDark={isDark}
             onToggleTheme={onToggleTheme}
+          />
+        ) : isTablet ? (
+          <IPad3D
+            isDark={isDark}
+            onToggleTheme={onToggleTheme}
+            openApps={openApps}
+            onOpenApp={onOpenApp}
+            onCloseApp={onCloseApp}
           />
         ) : (
           <MacBook3D
@@ -59,10 +72,10 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
 
         {/* Orbit Controls */}
         <OrbitControls
-          target={isMobile ? [0, 0, 0] : [0, 2.2, 0]}
+          target={targetPos}
           enableZoom={true}
-          minDistance={isMobile ? 5 : 6}
-          maxDistance={isMobile ? 14 : 15}
+          minDistance={isMobile ? 5 : isTablet ? 6 : 6}
+          maxDistance={isMobile ? 14 : isTablet ? 15 : 15}
           minPolarAngle={isMobile ? Math.PI / 3 : Math.PI / 4}
           maxPolarAngle={isMobile ? Math.PI / 1.9 : Math.PI / 2.05}
           minAzimuthAngle={isMobile ? -Math.PI / 4 : -Math.PI / 3}
