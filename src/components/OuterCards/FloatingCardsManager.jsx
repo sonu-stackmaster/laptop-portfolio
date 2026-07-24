@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
@@ -11,36 +11,49 @@ import ResumeCard from './ResumeCard';
 import ContactCard from './ContactCard';
 
 const cardComponents = {
-  about: { title: "About Me", icon: User, Component: AboutCard },
-  skills: { title: "Technical Stack", icon: Code2, Component: SkillsCard },
-  projects: { title: "Featured Projects", icon: FolderGit2, Component: ProjectsCard },
-  experience: { title: "Work Experience", icon: Briefcase, Component: ExperienceCard },
-  resume: { title: "Resume", icon: FileText, Component: ResumeCard },
-  contact: { title: "Get In Touch", icon: Mail, Component: ContactCard }
+  about: { title: "About Me", subtitle: "DEVELOPER OVERVIEW", icon: User, Component: AboutCard },
+  skills: { title: "Technical Stack", subtitle: "SKILLS & TECHNOLOGIES", icon: Code2, Component: SkillsCard },
+  projects: { title: "Featured Projects", subtitle: "SELECTED WORK", icon: FolderGit2, Component: ProjectsCard },
+  experience: { title: "Work Experience", subtitle: "CAREER TIMELINE", icon: Briefcase, Component: ExperienceCard },
+  resume: { title: "Resume", subtitle: "VERIFIED RESUME", icon: FileText, Component: ResumeCard },
+  contact: { title: "Get In Touch", subtitle: "CONNECT & INQUIRE", icon: Mail, Component: ContactCard }
 };
 
-// Preset positions surrounding the central laptop model (avoiding bottom keyboard)
-const dockingPositions = [
-  // Slot 0: Right floating dock
-  "right-4 sm:right-8 md:right-12 lg:right-16 top-12 sm:top-16 lg:top-20",
-  // Slot 1: Left floating dock
-  "left-4 sm:left-8 md:left-12 lg:left-16 top-12 sm:top-16 lg:top-20",
-  // Slot 2: Top center floating dock
-  "top-4 left-1/2 -translate-x-1/2"
-];
+// Fixed initial docking positions tied to each specific app ID
+const fixedCardPositions = {
+  about: "left-4 sm:left-8 md:left-12 lg:left-16 top-10 sm:top-14",
+  skills: "right-4 sm:right-8 md:right-12 lg:right-16 top-10 sm:top-14",
+  projects: "left-4 sm:left-10 lg:left-20 top-24 sm:top-28",
+  experience: "top-6 left-1/2 -translate-x-1/2",
+  resume: "right-4 sm:right-10 lg:right-20 top-24 sm:top-28",
+  contact: "top-12 left-1/2 -translate-x-1/2"
+};
 
 export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
+  const containerRef = useRef(null);
+  const [cardZIndexes, setCardZIndexes] = useState({});
+  const highestZIndex = useRef(50);
+
+  const bringToFront = (appId) => {
+    highestZIndex.current += 1;
+    setCardZIndexes((prev) => ({
+      ...prev,
+      [appId]: highestZIndex.current
+    }));
+  };
+
   return (
-    <div className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
+    <div ref={containerRef} className="fixed inset-0 pointer-events-none z-30 overflow-hidden">
       <AnimatePresence>
         {openApps.map((appId, index) => {
           const config = cardComponents[appId];
           if (!config) return null;
 
-          const { title, icon: Icon, Component } = config;
+          const { title, subtitle, icon: Icon, Component } = config;
 
-          // Compute docking slot
-          const posClass = dockingPositions[index % dockingPositions.length];
+          // Get fixed position for this specific card
+          const posClass = fixedCardPositions[appId] || "top-10 left-1/2 -translate-x-1/2";
+          const currentZ = cardZIndexes[appId] || (40 + index);
 
           const handleClose = () => {
             soundFx.playWindowClose();
@@ -50,16 +63,23 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
           return (
             <motion.div
               key={appId}
+              drag
+              dragConstraints={containerRef}
+              dragElastic={0.08}
+              dragMomentum={false}
+              onPointerDown={() => bringToFront(appId)}
+              onDragStart={() => bringToFront(appId)}
+              style={{ zIndex: currentZ }}
               initial={{ scale: 0.6, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.6, opacity: 0, y: -20 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className={`absolute pointer-events-auto w-[92vw] sm:w-[420px] md:w-[460px] max-h-[85vh] flex flex-col rounded-2xl ${
-                isDark ? 'glass-purple' : 'glass-orange'
-              } ${posClass} transition-colors duration-500 z-40`}
+                isDark ? 'glass-purple shadow-2xl shadow-purple-950/60' : 'glass-orange shadow-2xl shadow-orange-500/15'
+              } ${posClass} transition-colors duration-500 touch-none`}
             >
               {/* Card Header Bar */}
-              <div className={`flex items-center justify-between p-3.5 cursor-move select-none border-b ${
+              <div className={`flex items-center justify-between p-3.5 cursor-grab active:cursor-grabbing select-none border-b ${
                 isDark ? 'border-purple-500/20' : 'border-orange-200'
               }`}>
                 <div className="flex items-center space-x-2.5">
@@ -79,7 +99,7 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
                     <span className={`text-[10px] font-mono uppercase tracking-widest ${
                       isDark ? 'text-purple-400' : 'text-orange-600 font-bold'
                     }`}>
-                      PORTFOLIO CARD
+                      {subtitle}
                     </span>
                   </div>
                 </div>
@@ -87,6 +107,7 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={handleClose}
+                    onPointerDown={(e) => e.stopPropagation()}
                     className={`w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
                       isDark 
                         ? 'text-slate-400 hover:text-white hover:bg-rose-500/20 hover:border hover:border-rose-500/40' 

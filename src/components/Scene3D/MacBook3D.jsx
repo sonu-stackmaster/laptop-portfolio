@@ -4,7 +4,7 @@ import { Html, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import OSDesktop from '../LaptopOS/OSDesktop';
 
-// Chiclet Keyboard Generator with Precisely Bounded Backlight
+// Chiclet Keyboard Generator with Subtle Neon Purple/Orange Backlight
 function MacBookKeyboard({ isDark }) {
   const keyColor = "#11131b";
   const glowColor = isDark ? "#7c3aed" : "#ea580c";
@@ -39,7 +39,7 @@ function MacBookKeyboard({ isDark }) {
         <meshStandardMaterial color="#08090c" roughness={0.7} metalness={0.3} />
       </mesh>
 
-      {/* 2. PRECISELY BOUNDED BACKLIGHT MAT (Sits strictly under the keys, no bottom leakage) */}
+      {/* 2. SUBTLE NEON PURPLE/ORANGE BACKLIGHT MAT */}
       <mesh position={[0, 0.005, -0.21]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[8.7, 2.6]} />
         <meshStandardMaterial 
@@ -70,7 +70,7 @@ function MacBookKeyboard({ isDark }) {
         );
       })}
 
-      {/* 4. Soft Keyboard Fill Light */}
+      {/* 4. Soft Fill Light */}
       <pointLight 
         position={[0, 0.15, -0.21]} 
         intensity={isDark ? 0.4 : 0.25} 
@@ -133,7 +133,7 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp }
           </mesh>
         ))}
 
-        {/* Keyboard Keys Array with Precise Backlight Mat */}
+        {/* Keyboard Keys Array with Backlight Mat */}
         <MacBookKeyboard isDark={isDark} />
 
         {/* Bottom Rubber Feet */}

@@ -9,12 +9,12 @@ export const portfolioData = {
     github: "https://github.com/sonu-stackmaster",
     leetcode: "https://leetcode.com/sk0611",
     avatarUrl: "https://res.cloudinary.com/dqbph8yb8/image/upload/v1784908138/sonu-portrait_hcg9rh.jpg",
-    summary: "Senior Full Stack Developer with 4+ years of experience designing and delivering scalable cloud-native and AI-powered applications. Proven track record of building production systems end-to-end, optimizing performance & infrastructure costs, and deploying LLM-based solutions at scale.",
+    summary: "Senior Full Stack Developer with 4+ years of experience designing and delivering scalable cloud-native and AI-powered applications. Proven track record of building production systems end-to-end, optimizing performance, and deploying LLM-based solutions at scale.",
     stats: [
-      { label: "Projects Delivered", value: "20+" },
-      { label: "Daily Active Users", value: "50,000+" },
-      { label: "Cost Reduction", value: "25%" },
-      { label: "Response Latency", value: "<200ms" }
+      { label: "Years Experience", value: "4+ Yrs" },
+      { label: "Projects Shipped", value: "20+" },
+      { label: "Tech Stack Tools", value: "15+" },
+      { label: "Code Quality", value: "100%" }
     ]
   },
   skills: {
