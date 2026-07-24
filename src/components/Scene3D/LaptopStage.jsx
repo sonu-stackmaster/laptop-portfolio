@@ -2,13 +2,14 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 import MacBook3D from './MacBook3D';
+import IPhone3D from './iPhone3D';
 
-export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp }) {
+export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp, isMobile }) {
   return (
     <div className="relative w-full h-screen overflow-hidden select-none flex items-center justify-center">
       {/* Dynamic Ambient Background Backlight */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Core Radiating Ambient Glow centered behind laptop screen */}
+        {/* Core Radiating Ambient Glow centered behind model */}
         <div 
           className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[550px] sm:w-[950px] sm:h-[700px] rounded-full transition-all duration-700 animate-pulse-glow ${
             isDark 
@@ -29,32 +30,43 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
 
       {/* 3D Canvas Stage */}
       <Canvas className="w-full h-full relative z-10">
-        <PerspectiveCamera makeDefault position={[0, 2.2, 13]} fov={38} />
+        <PerspectiveCamera 
+          makeDefault 
+          position={isMobile ? [0, 0, 9.5] : [0, 2.2, 13]} 
+          fov={isMobile ? 42 : 38} 
+        />
         
         {/* Lighting Setup */}
-        <ambientLight intensity={isDark ? 0.7 : 1.2} />
-        <directionalLight position={[5, 10, 7]} intensity={isDark ? 1.5 : 2.0} color="#ffffff" />
+        <ambientLight intensity={isDark ? 0.8 : 1.2} />
+        <directionalLight position={[5, 10, 7]} intensity={isDark ? 1.6 : 2.0} color="#ffffff" />
         <directionalLight position={[-5, 5, -5]} intensity={isDark ? 0.8 : 1.0} color={isDark ? "#8b5cf6" : "#f97316"} />
         <pointLight position={[0, 4, 4]} intensity={isDark ? 1.2 : 0.8} color="#ffffff" />
 
-        {/* 3D MacBook Pro Model */}
-        <MacBook3D
-          isDark={isDark}
-          onToggleTheme={onToggleTheme}
-          openApps={openApps}
-          onOpenApp={onOpenApp}
-        />
+        {/* Render 3D Model: iPhone 15 Pro for Mobile, MacBook Pro for Desktop */}
+        {isMobile ? (
+          <IPhone3D
+            isDark={isDark}
+            onToggleTheme={onToggleTheme}
+          />
+        ) : (
+          <MacBook3D
+            isDark={isDark}
+            onToggleTheme={onToggleTheme}
+            openApps={openApps}
+            onOpenApp={onOpenApp}
+          />
+        )}
 
         {/* Orbit Controls */}
         <OrbitControls
-          target={[0, 2.2, 0]}
+          target={isMobile ? [0, 0, 0] : [0, 2.2, 0]}
           enableZoom={true}
-          minDistance={6}
-          maxDistance={15}
-          minPolarAngle={Math.PI / 4}
-          maxPolarAngle={Math.PI / 2.05}
-          minAzimuthAngle={-Math.PI / 4}
-          maxAzimuthAngle={Math.PI / 4}
+          minDistance={isMobile ? 5 : 6}
+          maxDistance={isMobile ? 14 : 15}
+          minPolarAngle={isMobile ? Math.PI / 3 : Math.PI / 4}
+          maxPolarAngle={isMobile ? Math.PI / 1.9 : Math.PI / 2.05}
+          minAzimuthAngle={isMobile ? -Math.PI / 4 : -Math.PI / 3}
+          maxAzimuthAngle={isMobile ? Math.PI / 4 : Math.PI / 3}
           enablePan={false}
           rotateSpeed={0.6}
         />
