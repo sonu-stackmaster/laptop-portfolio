@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail } from 'lucide-react';
+import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail, Terminal, Compass, Sliders, Music, Notebook } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
 import AboutCard from './AboutCard';
@@ -10,13 +10,24 @@ import ExperienceCard from './ExperienceCard';
 import ResumeCard from './ResumeCard';
 import ContactCard from './ContactCard';
 
+import TerminalDesktopCard from './TerminalDesktopCard';
+import SafariDesktopCard from './SafariDesktopCard';
+import SettingsDesktopCard from './SettingsDesktopCard';
+import MusicDesktopCard from './MusicDesktopCard';
+import NotesDesktopCard from './NotesDesktopCard';
+
 const cardComponents = {
   about: { title: "About Me", subtitle: "DEVELOPER OVERVIEW", icon: User, Component: AboutCard },
   skills: { title: "Technical Stack", subtitle: "SKILLS & TECHNOLOGIES", icon: Code2, Component: SkillsCard },
   projects: { title: "Featured Projects", subtitle: "SELECTED WORK", icon: FolderGit2, Component: ProjectsCard },
   experience: { title: "Work Experience", subtitle: "CAREER TIMELINE", icon: Briefcase, Component: ExperienceCard },
   resume: { title: "Resume", subtitle: "VERIFIED RESUME", icon: FileText, Component: ResumeCard },
-  contact: { title: "Get In Touch", subtitle: "CONNECT & INQUIRE", icon: Mail, Component: ContactCard }
+  contact: { title: "Get In Touch", subtitle: "CONNECT & INQUIRE", icon: Mail, Component: ContactCard },
+  terminal: { title: "Terminal CLI", subtitle: "INTERACTIVE CONSOLE", icon: Terminal, Component: TerminalDesktopCard },
+  safari: { title: "Safari Browser", subtitle: "WEB BOOKMARKS", icon: Compass, Component: SafariDesktopCard },
+  settings: { title: "System Preferences", subtitle: "DESKTOP SETTINGS", icon: Sliders, Component: SettingsDesktopCard },
+  music: { title: "Apple Music", subtitle: "DEV FOCUS LOFI", icon: Music, Component: MusicDesktopCard },
+  notes: { title: "Developer Notes", subtitle: "STICKY NOTES", icon: Notebook, Component: NotesDesktopCard }
 };
 
 // Fixed initial docking positions tied to each specific app ID
@@ -26,7 +37,12 @@ const fixedCardPositions = {
   projects: "left-4 sm:left-10 lg:left-20 top-24 sm:top-28",
   experience: "top-6 left-1/2 -translate-x-1/2",
   resume: "right-4 sm:right-10 lg:right-20 top-24 sm:top-28",
-  contact: "top-12 left-1/2 -translate-x-1/2"
+  contact: "top-12 left-1/2 -translate-x-1/2",
+  terminal: "top-12 left-1/2 -translate-x-1/2",
+  safari: "top-10 left-10",
+  settings: "top-14 right-10",
+  music: "top-16 left-1/2 -translate-x-1/2",
+  notes: "top-12 right-16"
 };
 
 export default function FloatingCardsManager({ openApps, onCloseApp, isDark }) {

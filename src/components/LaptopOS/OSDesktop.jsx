@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
-  Sun, Moon, Volume2, VolumeX, Wifi, Battery, Terminal
+  Sun, Moon, Volume2, VolumeX, Wifi, Battery, Terminal,
+  Compass, Sliders, Music, Notebook
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
@@ -13,6 +14,15 @@ const appIcons = [
   { id: 'experience', label: 'Experience', icon: Briefcase, color: 'from-amber-500 to-orange-600', lightColor: 'from-amber-600 to-orange-700' },
   { id: 'resume', label: 'Resume', icon: FileText, color: 'from-rose-500 to-pink-600', lightColor: 'from-rose-600 to-pink-700' },
   { id: 'contact', label: 'Contact', icon: Mail, color: 'from-violet-500 to-purple-700', lightColor: 'from-violet-600 to-purple-800' }
+];
+
+// macOS Dock Apps (Bottom Dock Bar Utilities)
+const dockApps = [
+  { id: 'safari', label: 'Safari', icon: Compass, color: 'from-blue-500 to-sky-600', lightColor: 'from-blue-600 to-sky-700' },
+  { id: 'terminal', label: 'Terminal', icon: Terminal, color: 'from-gray-700 to-slate-900', lightColor: 'from-slate-800 to-zinc-900' },
+  { id: 'settings', label: 'Settings', icon: Sliders, color: 'from-slate-600 to-zinc-800', lightColor: 'from-slate-700 to-zinc-800' },
+  { id: 'music', label: 'Music', icon: Music, color: 'from-rose-500 to-pink-600', lightColor: 'from-rose-600 to-pink-700' },
+  { id: 'notes', label: 'Notes', icon: Notebook, color: 'from-amber-500 to-yellow-600', lightColor: 'from-amber-600 to-yellow-700' }
 ];
 
 export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }) {
@@ -252,9 +262,44 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
                 })}
               </div>
             </div>
+
+            {/* macOS Floating Bottom Dock Bar */}
+            <div className={`py-1.5 px-3 rounded-2xl backdrop-blur-xl border flex items-center justify-around max-w-sm w-full mx-auto mb-1 transition-all shadow-2xl ${
+              isDark 
+                ? 'bg-slate-900/80 border-white/15 shadow-purple-950/40' 
+                : 'bg-white/90 border-orange-200/90 shadow-orange-500/20'
+            }`}>
+              {dockApps.map((app) => {
+                const Icon = app.icon;
+                const isOpen = openApps.includes(app.id);
+
+                return (
+                  <motion.button
+                    key={app.id}
+                    whileHover={{ scale: 1.25, y: -6 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => handleAppClick(app.id)}
+                    className="flex flex-col items-center group relative p-1"
+                    title={app.label}
+                  >
+                    <div className={`w-9 h-9 rounded-xl bg-gradient-to-tr ${
+                      isDark ? app.color : (app.lightColor || app.color)
+                    } flex items-center justify-center text-white shadow-md transition-shadow group-hover:shadow-xl`}>
+                      <Icon size={18} />
+                    </div>
+                    {isOpen && (
+                      <span className={`w-1.5 h-1.5 rounded-full mt-0.5 ${
+                        isDark ? 'bg-purple-400' : 'bg-orange-500'
+                      }`} />
+                    )}
+                  </motion.button>
+                );
+              })}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
 }
+
