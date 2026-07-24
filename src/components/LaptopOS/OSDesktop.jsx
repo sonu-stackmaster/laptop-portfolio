@@ -96,7 +96,7 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
               SONU<span className={isDark ? "text-purple-400" : "text-orange-600"}>OS</span> v4.2
             </h1>
             <p className={`text-xs mb-6 font-mono ${isDark ? 'text-purple-300/80' : 'text-slate-600'}`}>
-              Senior Developer Portfolio Loading...
+              Loading....
             </p>
 
             {/* Progress Bar */}
