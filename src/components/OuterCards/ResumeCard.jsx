@@ -37,30 +37,33 @@ export default function ResumeCard({ isDark }) {
             <h3 className={`text-sm font-bold font-heading ${
               isDark ? 'text-slate-100' : 'text-slate-900'
             }`}>
-              docs/Sonu-CV.pdf
+              Curriculum Vitae
             </h3>
             <p className={`text-xs ${
               isDark ? 'text-slate-400' : 'text-slate-600 font-medium'
             }`}>
-              Verified Senior Developer Resume
+              Senior Full Stack & AI Developer
             </p>
           </div>
         </div>
 
         <div className="flex items-center space-x-2">
+          {/* Eye Icon-Only Button */}
           <a
             href="/docs/Sonu-CV.pdf"
             target="_blank"
             rel="noreferrer"
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+            className={`p-2 rounded-lg transition-all flex items-center justify-center ${
               isDark 
-                ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' 
-                : 'bg-white text-slate-900 border border-orange-300 hover:bg-orange-100/60 shadow-xs'
+                ? 'bg-slate-800 text-slate-200 hover:bg-slate-700 hover:text-purple-300' 
+                : 'bg-white text-slate-800 border border-orange-300 hover:bg-orange-100/80 hover:text-orange-600 shadow-xs'
             }`}
+            title="View PDF"
           >
-            <Eye size={14} />
-            <span>Open PDF</span>
+            <Eye size={16} />
           </a>
+
+          {/* Download Button */}
           <button
             onClick={handleDownload}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-md hover:scale-105 transition-all flex items-center gap-1.5 ${

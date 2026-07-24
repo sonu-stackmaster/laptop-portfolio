@@ -11,14 +11,16 @@ export default function AboutCard({ isDark }) {
       <div className={`flex items-center space-x-4 pb-4 border-b ${
         isDark ? 'border-purple-500/20' : 'border-orange-200'
       }`}>
-        <div className="relative">
-          <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-white text-2xl font-extrabold shadow-lg ${
-            isDark 
-              ? 'bg-gradient-to-tr from-purple-600 to-indigo-500' 
-              : 'bg-gradient-to-tr from-orange-500 to-amber-500'
-          }`}>
-            SK
-          </div>
+        <div className="relative shrink-0">
+          <img
+            src={personalInfo.avatarUrl}
+            alt={personalInfo.name}
+            className={`w-16 h-16 rounded-2xl object-cover shadow-xl border-2 transition-transform duration-300 hover:scale-105 ${
+              isDark 
+                ? 'border-purple-500/50 shadow-purple-500/20' 
+                : 'border-orange-400/60 shadow-orange-500/20'
+            }`}
+          />
           <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900" title="Available for hire" />
         </div>
         <div>

@@ -4,10 +4,10 @@ import { Html, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import OSDesktop from '../LaptopOS/OSDesktop';
 
-// Chiclet Keyboard Generator for realistic MacBook Pro keyboard
+// Chiclet Keyboard Generator with Precisely Bounded Backlight
 function MacBookKeyboard({ isDark }) {
-  const keyColor = "#12141c";
-  const glowColor = isDark ? "#8b5cf6" : "#f97316";
+  const keyColor = "#11131b";
+  const glowColor = isDark ? "#7c3aed" : "#ea580c";
 
   const rows = [
     // Row 0: Function Keys
@@ -33,13 +33,24 @@ function MacBookKeyboard({ isDark }) {
 
   return (
     <group position={[0, 0.21, 0.3]}>
-      {/* Recessed Keyboard Well Inset */}
-      <mesh position={[0, -0.01, 0.24]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[9.0, 3.2]} />
-        <meshStandardMaterial color="#0a0b0f" roughness={0.7} metalness={0.3} />
+      {/* 1. Recessed Keyboard Well Base Inset */}
+      <mesh position={[0, -0.01, -0.21]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[8.85, 2.75]} />
+        <meshStandardMaterial color="#08090c" roughness={0.7} metalness={0.3} />
       </mesh>
 
-      {/* Keys Layout */}
+      {/* 2. PRECISELY BOUNDED BACKLIGHT MAT (Sits strictly under the keys, no bottom leakage) */}
+      <mesh position={[0, 0.005, -0.21]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[8.7, 2.6]} />
+        <meshStandardMaterial 
+          color={glowColor}
+          emissive={glowColor}
+          emissiveIntensity={isDark ? 0.35 : 0.2}
+          roughness={0.3}
+        />
+      </mesh>
+
+      {/* 3. Keys Layout */}
       {rows.map((row, rIdx) => {
         let currentX = -4.1;
         return (
@@ -49,9 +60,9 @@ function MacBookKeyboard({ isDark }) {
               currentX += key.w + 0.07;
 
               return (
-                <mesh key={kIdx} position={[posX, 0.03, -row.y]}>
+                <mesh key={kIdx} position={[posX, 0.032, -row.y]}>
                   <boxGeometry args={[key.w, 0.05, key.h]} />
-                  <meshStandardMaterial color={keyColor} roughness={0.3} metalness={0.8} />
+                  <meshStandardMaterial color={keyColor} roughness={0.3} metalness={0.7} />
                 </mesh>
               );
             })}
@@ -59,8 +70,13 @@ function MacBookKeyboard({ isDark }) {
         );
       })}
 
-      {/* Backlit Glow beneath keycaps */}
-      <pointLight position={[0, 0.05, 0.2]} intensity={isDark ? 0.9 : 0.5} color={glowColor} distance={4} />
+      {/* 4. Soft Keyboard Fill Light */}
+      <pointLight 
+        position={[0, 0.15, -0.21]} 
+        intensity={isDark ? 0.4 : 0.25} 
+        color={glowColor} 
+        distance={3.5} 
+      />
     </group>
   );
 }
@@ -106,18 +122,18 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp }
         {/* Trackpad Border Highlight */}
         <lineSegments position={[0, 0.211, 2.3]} rotation={[-Math.PI / 2, 0, 0]}>
           <edgesGeometry args={[new THREE.PlaneGeometry(3.8, 2.4)]} />
-          <lineBasicMaterial color={isDark ? "#8b5cf6" : "#f97316"} opacity={0.35} transparent />
+          <lineBasicMaterial color={isDark ? "#8b5cf6" : "#f97316"} opacity={0.3} transparent />
         </lineSegments>
 
         {/* Speaker Grills (Left & Right of Keyboard) */}
         {[-4.9, 4.9].map((xPos, idx) => (
-          <mesh key={idx} position={[xPos, 0.21, 0.3]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[0.75, 3.1]} />
+          <mesh key={idx} position={[xPos, 0.21, 0.09]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[0.75, 2.8]} />
             <meshStandardMaterial color="#0d0e14" roughness={0.8} />
           </mesh>
         ))}
 
-        {/* Keyboard Keys Array */}
+        {/* Keyboard Keys Array with Precise Backlight Mat */}
         <MacBookKeyboard isDark={isDark} />
 
         {/* Bottom Rubber Feet */}
@@ -164,7 +180,7 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp }
           <meshBasicMaterial color="#1e293b" />
         </mesh>
 
-        {/* 4. DREI HTML SCREEN DISPLAY (Proportionally scaled to fit screen bezel perfectly) */}
+        {/* 4. DREI HTML SCREEN DISPLAY */}
         <Html
           transform
           occlude

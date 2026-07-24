@@ -11,11 +11,11 @@ import ResumeCard from './ResumeCard';
 import ContactCard from './ContactCard';
 
 const cardComponents = {
-  about: { title: "About Sonu", icon: User, Component: AboutCard },
+  about: { title: "About Me", icon: User, Component: AboutCard },
   skills: { title: "Technical Stack", icon: Code2, Component: SkillsCard },
   projects: { title: "Featured Projects", icon: FolderGit2, Component: ProjectsCard },
   experience: { title: "Work Experience", icon: Briefcase, Component: ExperienceCard },
-  resume: { title: "Resume (Sonu-CV.pdf)", icon: FileText, Component: ResumeCard },
+  resume: { title: "Resume", icon: FileText, Component: ResumeCard },
   contact: { title: "Get In Touch", icon: Mail, Component: ContactCard }
 };
 
