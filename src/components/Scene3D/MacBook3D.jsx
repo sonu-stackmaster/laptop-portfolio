@@ -1,13 +1,44 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
 import OSDesktop from '../LaptopOS/OSDesktop';
+import { soundFx } from '../../utils/audio';
 
-// Chiclet Keyboard Generator with Subtle Neon Purple/Orange Backlight
-function MacBookKeyboard({ isDark }) {
+// Chiclet Keyboard with Physical Keystroke Depression & Dynamic Control Center Backlight
+function MacBookKeyboard({ isDark, keyboardBrightness = 80 }) {
+  const [activeKeyIdx, setActiveKeyIdx] = useState(null);
   const keyColor = "#11131b";
   const glowColor = isDark ? "#7c3aed" : "#ea580c";
+
+  // Calculate dynamic emissive intensity based on Control Center slider (0 - 100)
+  const brightnessMultiplier = keyboardBrightness / 100;
+  const emissiveInt = (isDark ? 0.45 : 0.3) * brightnessMultiplier;
+  const lightIntensity = (isDark ? 0.5 : 0.35) * brightnessMultiplier;
+
+  // Listen to real physical user typing on physical keyboard
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't trigger if user is typing in an input
+      if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) return;
+      
+      soundFx.playKeyClick();
+      // Select random key index in rows to visually depress
+      const randomIdx = Math.floor(Math.random() * 14);
+      setActiveKeyIdx(randomIdx);
+    };
+
+    const handleKeyUp = () => {
+      setActiveKeyIdx(null);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []);
 
   const rows = [
     // Row 0: Function Keys
@@ -39,18 +70,18 @@ function MacBookKeyboard({ isDark }) {
         <meshStandardMaterial color="#08090c" roughness={0.7} metalness={0.3} />
       </mesh>
 
-      {/* 2. SUBTLE NEON PURPLE/ORANGE BACKLIGHT MAT */}
+      {/* 2. DYNAMIC NEON BACKLIGHT MAT (Controlled by Control Center) */}
       <mesh position={[0, 0.005, -0.21]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[8.7, 2.6]} />
         <meshStandardMaterial 
           color={glowColor}
           emissive={glowColor}
-          emissiveIntensity={isDark ? 0.35 : 0.2}
+          emissiveIntensity={emissiveInt}
           roughness={0.3}
         />
       </mesh>
 
-      {/* 3. Keys Layout */}
+      {/* 3. Keys Layout with Interactive Physical Travel */}
       {rows.map((row, rIdx) => {
         let currentX = -4.1;
         return (
@@ -58,11 +89,19 @@ function MacBookKeyboard({ isDark }) {
             {row.keys.map((key, kIdx) => {
               const posX = currentX + key.w / 2;
               currentX += key.w + 0.07;
+              const isPressed = activeKeyIdx === kIdx;
 
               return (
-                <mesh key={kIdx} position={[posX, 0.032, -row.y]}>
+                <mesh 
+                  key={kIdx} 
+                  position={[posX, isPressed ? 0.012 : 0.032, -row.y]}
+                >
                   <boxGeometry args={[key.w, 0.05, key.h]} />
-                  <meshStandardMaterial color={keyColor} roughness={0.3} metalness={0.7} />
+                  <meshStandardMaterial 
+                    color={isPressed ? (isDark ? "#3b1e6e" : "#fdba74") : keyColor} 
+                    roughness={0.3} 
+                    metalness={0.7} 
+                  />
                 </mesh>
               );
             })}
@@ -70,10 +109,10 @@ function MacBookKeyboard({ isDark }) {
         );
       })}
 
-      {/* 4. Soft Fill Light */}
+      {/* 4. Soft Fill Light driven by brightness */}
       <pointLight 
         position={[0, 0.15, -0.21]} 
-        intensity={isDark ? 0.4 : 0.25} 
+        intensity={lightIntensity} 
         color={glowColor} 
         distance={3.5} 
       />
@@ -81,7 +120,18 @@ function MacBookKeyboard({ isDark }) {
   );
 }
 
-export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp, currentWallpaper, onChangeWallpaper }) {
+export default function MacBook3D({ 
+  isDark, 
+  onToggleTheme, 
+  openApps, 
+  onOpenApp, 
+  currentWallpaper, 
+  onChangeWallpaper,
+  screenBrightness = 100,
+  keyboardBrightness = 80,
+  onOpenSpotlight,
+  onOpenControlCenter
+}) {
   const macbookGroup = useRef();
 
   // Subtle float motion around origin
@@ -115,7 +165,11 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp, 
         </mesh>
 
         {/* MacBook Glass Trackpad */}
-        <mesh position={[0, 0.21, 2.3]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh 
+          position={[0, 0.21, 2.3]} 
+          rotation={[-Math.PI / 2, 0, 0]}
+          onClick={() => soundFx.playKeyClick()}
+        >
           <planeGeometry args={[3.8, 2.4]} />
           <meshStandardMaterial color="#161821" roughness={0.1} metalness={0.9} />
         </mesh>
@@ -133,8 +187,8 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp, 
           </mesh>
         ))}
 
-        {/* Keyboard Keys Array with Backlight Mat */}
-        <MacBookKeyboard isDark={isDark} />
+        {/* Keyboard Keys Array with Dynamic Backlight & Typing Listeners */}
+        <MacBookKeyboard isDark={isDark} keyboardBrightness={keyboardBrightness} />
 
         {/* Bottom Rubber Feet */}
         {[
@@ -195,10 +249,13 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp, 
             onOpenApp={onOpenApp}
             currentWallpaper={currentWallpaper}
             onChangeWallpaper={onChangeWallpaper}
+            screenBrightness={screenBrightness}
+            onOpenSpotlight={onOpenSpotlight}
+            onOpenControlCenter={onOpenControlCenter}
           />
         </Html>
 
-        {/* PROMINENT HIGH-VISIBILITY MACBOOK CAMERA NOTCH ASSEMBLY (Positioned on top bezel at z=0.21) */}
+        {/* PROMINENT HIGH-VISIBILITY MACBOOK CAMERA NOTCH ASSEMBLY */}
         <group position={[0, 6.6, 0.21]}>
           {/* Camera Notch Cutout Block */}
           <mesh position={[0, 0, 0]}>
@@ -218,19 +275,17 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp, 
             <meshStandardMaterial color="#020617" roughness={0.05} metalness={0.95} />
           </mesh>
 
-          {/* High-Contrast Reflective Glass Glint Dot */}
+          {/* Reflective Glint Dot */}
           <mesh position={[-0.02, 0.02, 0.032]}>
             <circleGeometry args={[0.025, 16]} />
             <meshBasicMaterial color="#38bdf8" />
           </mesh>
 
-          {/* Glowing Green Camera Active Indicator LED Light */}
+          {/* Glowing Green Camera Active LED */}
           <mesh position={[0.26, 0, 0.031]}>
             <circleGeometry args={[0.03, 16]} />
             <meshBasicMaterial color="#22c55e" />
           </mesh>
-
-          {/* Small Green LED Light Glow */}
           <pointLight position={[0.26, 0, 0.05]} intensity={0.4} color="#22c55e" distance={0.6} />
         </group>
 

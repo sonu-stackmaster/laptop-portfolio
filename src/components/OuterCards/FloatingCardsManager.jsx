@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail, Terminal, Compass, Sliders, Music, Notebook } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
@@ -45,6 +45,108 @@ const fixedCardPositions = {
   notes: "top-12 right-16"
 };
 
+// Individual Floating Card with Header-Only Drag Trigger
+function FloatingCardItem({
+  appId,
+  index,
+  config,
+  containerRef,
+  isDark,
+  onToggleTheme,
+  isMuted,
+  onToggleSound,
+  currentWallpaper,
+  onChangeWallpaper,
+  onClose,
+  bringToFront,
+  currentZ
+}) {
+  const dragControls = useDragControls();
+  const { title, subtitle, icon: Icon, Component } = config;
+  const posClass = fixedCardPositions[appId] || "top-10 left-1/2 -translate-x-1/2";
+
+  return (
+    <motion.div
+      drag
+      dragControls={dragControls}
+      dragListener={false}
+      dragConstraints={containerRef}
+      dragElastic={0.08}
+      dragMomentum={false}
+      onPointerDown={() => bringToFront(appId)}
+      onDragStart={() => bringToFront(appId)}
+      style={{ zIndex: currentZ }}
+      initial={{ scale: 0.6, opacity: 0, y: 30 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      exit={{ scale: 0.6, opacity: 0, y: -20 }}
+      transition={{ type: "spring", stiffness: 300, damping: 25 }}
+      className={`absolute pointer-events-auto w-[90vw] sm:w-[360px] md:w-[380px] lg:w-[400px] max-h-[78vh] flex flex-col rounded-2xl ${
+        isDark ? 'glass-purple shadow-2xl shadow-purple-950/60' : 'glass-orange shadow-2xl shadow-orange-500/15'
+      } ${posClass} transition-colors duration-500`}
+    >
+      {/* Card Header Bar (Draggable Handle ONLY) */}
+      <div 
+        onPointerDown={(e) => {
+          bringToFront(appId);
+          dragControls.start(e);
+        }}
+        className={`flex items-center justify-between px-3.5 py-2.5 cursor-grab active:cursor-grabbing select-none border-b ${
+          isDark ? 'border-purple-500/20' : 'border-orange-200'
+        }`}
+      >
+        <div className="flex items-center space-x-2.5">
+          <div className={`p-1.5 rounded-xl ${
+            isDark 
+              ? 'bg-purple-600/30 text-purple-300 border border-purple-500/30' 
+              : 'bg-orange-500/20 text-orange-600 border border-orange-400/40'
+          }`}>
+            <Icon size={16} />
+          </div>
+          <div>
+            <h3 className={`text-xs font-extrabold font-heading ${
+              isDark ? 'text-slate-100' : 'text-slate-900'
+            }`}>
+              {title}
+            </h3>
+            <span className={`text-[9px] font-mono uppercase tracking-widest ${
+              isDark ? 'text-purple-400' : 'text-orange-600 font-bold'
+            }`}>
+              {subtitle}
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={onClose}
+            onPointerDown={(e) => e.stopPropagation()}
+            className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${
+              isDark 
+                ? 'text-slate-400 hover:text-white hover:bg-rose-500/20 hover:border hover:border-rose-500/40' 
+                : 'text-slate-500 hover:text-slate-900 hover:bg-rose-100 hover:border hover:border-rose-300'
+            }`}
+            title="Close Window"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      </div>
+
+      {/* Card Content Body - 100% interactive without dragging window */}
+      <div className="p-3.5 sm:p-4 overflow-y-auto max-h-[calc(78vh-55px)]">
+        <Component
+          isDark={isDark}
+          onToggleTheme={onToggleTheme}
+          isMuted={isMuted}
+          onToggleSound={onToggleSound}
+          currentWallpaper={currentWallpaper}
+          onChangeWallpaper={onChangeWallpaper}
+        />
+      </div>
+    </motion.div>
+  );
+}
+
 export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onToggleTheme, currentWallpaper, onChangeWallpaper }) {
   const containerRef = useRef(null);
   const [cardZIndexes, setCardZIndexes] = useState({});
@@ -73,10 +175,6 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onT
           const config = cardComponents[appId];
           if (!config) return null;
 
-          const { title, subtitle, icon: Icon, Component } = config;
-
-          // Get fixed position for this specific card
-          const posClass = fixedCardPositions[appId] || "top-10 left-1/2 -translate-x-1/2";
           const currentZ = cardZIndexes[appId] || (40 + index);
 
           const handleClose = () => {
@@ -85,77 +183,22 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onT
           };
 
           return (
-            <motion.div
+            <FloatingCardItem
               key={appId}
-              drag
-              dragConstraints={containerRef}
-              dragElastic={0.08}
-              dragMomentum={false}
-              onPointerDown={() => bringToFront(appId)}
-              onDragStart={() => bringToFront(appId)}
-              style={{ zIndex: currentZ }}
-              initial={{ scale: 0.6, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.6, opacity: 0, y: -20 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className={`absolute pointer-events-auto w-[90vw] sm:w-[360px] md:w-[380px] lg:w-[400px] max-h-[78vh] flex flex-col rounded-2xl ${
-                isDark ? 'glass-purple shadow-2xl shadow-purple-950/60' : 'glass-orange shadow-2xl shadow-orange-500/15'
-              } ${posClass} transition-colors duration-500 touch-none`}
-            >
-              {/* Card Header Bar */}
-              <div className={`flex items-center justify-between px-3.5 py-2.5 cursor-grab active:cursor-grabbing select-none border-b ${
-                isDark ? 'border-purple-500/20' : 'border-orange-200'
-              }`}>
-                <div className="flex items-center space-x-2.5">
-                  <div className={`p-1.5 rounded-xl ${
-                    isDark 
-                      ? 'bg-purple-600/30 text-purple-300 border border-purple-500/30' 
-                      : 'bg-orange-500/20 text-orange-600 border border-orange-400/40'
-                  }`}>
-                    <Icon size={16} />
-                  </div>
-                  <div>
-                    <h3 className={`text-xs font-extrabold font-heading ${
-                      isDark ? 'text-slate-100' : 'text-slate-900'
-                    }`}>
-                      {title}
-                    </h3>
-                    <span className={`text-[9px] font-mono uppercase tracking-widest ${
-                      isDark ? 'text-purple-400' : 'text-orange-600 font-bold'
-                    }`}>
-                      {subtitle}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={handleClose}
-                    onPointerDown={(e) => e.stopPropagation()}
-                    className={`w-6 h-6 rounded-lg flex items-center justify-center transition-all ${
-                      isDark 
-                        ? 'text-slate-400 hover:text-white hover:bg-rose-500/20 hover:border hover:border-rose-500/40' 
-                        : 'text-slate-500 hover:text-slate-900 hover:bg-rose-100 hover:border hover:border-rose-300'
-                    }`}
-                    title="Close Window"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              </div>
-
-              {/* Card Content Body */}
-              <div className="p-3.5 sm:p-4 overflow-y-auto max-h-[calc(78vh-55px)]">
-                <Component
-                  isDark={isDark}
-                  onToggleTheme={onToggleTheme}
-                  isMuted={isMuted}
-                  onToggleSound={handleToggleSound}
-                  currentWallpaper={currentWallpaper}
-                  onChangeWallpaper={onChangeWallpaper}
-                />
-              </div>
-            </motion.div>
+              appId={appId}
+              index={index}
+              config={config}
+              containerRef={containerRef}
+              isDark={isDark}
+              onToggleTheme={onToggleTheme}
+              isMuted={isMuted}
+              onToggleSound={handleToggleSound}
+              currentWallpaper={currentWallpaper}
+              onChangeWallpaper={onChangeWallpaper}
+              onClose={handleClose}
+              bringToFront={bringToFront}
+              currentZ={currentZ}
+            />
           );
         })}
       </AnimatePresence>

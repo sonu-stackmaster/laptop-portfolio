@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
   Sun, Moon, Volume2, VolumeX, Wifi, Battery, Terminal,
-  Compass, Sliders, Music, Notebook
+  Compass, Sliders, Music, Notebook, Search, Sparkles
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 import LiveWallpaper from '../Wallpapers/LiveWallpaper';
@@ -26,7 +26,16 @@ const dockApps = [
   { id: 'notes', label: 'Notes', icon: Notebook, color: 'from-amber-500 to-yellow-600', lightColor: 'from-amber-600 to-yellow-700' }
 ];
 
-export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp, currentWallpaper }) {
+export default function OSDesktop({ 
+  isDark, 
+  onToggleTheme, 
+  openApps, 
+  onOpenApp, 
+  currentWallpaper,
+  screenBrightness = 100,
+  onOpenSpotlight,
+  onOpenControlCenter
+}) {
   const [booted, setBooted] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
   const [timeStr, setTimeStr] = useState('');
@@ -77,6 +86,12 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp, 
     <div className={`w-full h-full relative overflow-hidden select-none font-sans transition-colors duration-500 ${
       isDark ? 'glass-screen-purple text-white' : 'glass-screen-orange text-slate-900'
     }`}>
+      {/* Dynamic Display Brightness Dimming Overlay */}
+      <div 
+        className="absolute inset-0 bg-black pointer-events-none z-40 transition-opacity duration-300"
+        style={{ opacity: ((100 - screenBrightness) / 100) * 0.75 }}
+      />
+
       {/* Live Motion-Graphics Wallpaper Engine */}
       <LiveWallpaper wallpaperId={currentWallpaper} isDark={isDark} />
 
@@ -168,7 +183,38 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp, 
               </div>
 
               {/* Status Controls */}
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-2.5">
+                {/* Spotlight Search Trigger */}
+                <button
+                  onClick={() => {
+                    soundFx.playSpotlightChime?.();
+                    if (onOpenSpotlight) onOpenSpotlight();
+                  }}
+                  className={`flex items-center space-x-1 px-1.5 py-0.5 rounded-md transition-all ${
+                    isDark 
+                      ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white border border-white/10' 
+                      : 'bg-orange-100/80 hover:bg-orange-200/80 text-slate-700 hover:text-slate-900 border border-orange-200'
+                  }`}
+                  title="Spotlight Search (⌘K)"
+                >
+                  <Search size={11} />
+                  <span className="text-[10px] font-mono font-medium hidden sm:inline">⌘K</span>
+                </button>
+
+                {/* Control Center Trigger */}
+                <button
+                  onClick={() => {
+                    soundFx.playControlCenterOpen?.();
+                    if (onOpenControlCenter) onOpenControlCenter();
+                  }}
+                  className={`p-1 rounded-md transition-colors ${
+                    isDark ? 'hover:bg-slate-800 text-slate-300 hover:text-purple-400' : 'hover:bg-orange-100 text-slate-700 hover:text-orange-600'
+                  }`}
+                  title="Control Center"
+                >
+                  <Sliders size={13} />
+                </button>
+
                 <button
                   onClick={toggleSound}
                   className={`transition-colors ${

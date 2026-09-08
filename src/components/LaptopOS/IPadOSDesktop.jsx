@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
   Sun, Moon, Volume2, VolumeX, Wifi, Battery, Terminal, 
-  Compass, Sliders, Music, Notebook, ArrowLeft, X, Sparkles, Clock
+  Compass, Sliders, Music, Notebook, ArrowLeft, X, Sparkles, Clock, Search
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
@@ -53,7 +53,18 @@ const dockApps = [
   { id: 'notes', label: 'Notes', icon: Notebook, color: 'from-amber-500 to-yellow-600' }
 ];
 
-export default function IPadOSDesktop({ isDark, onToggleTheme, openApps = [], onOpenApp, onCloseApp, currentWallpaper, onChangeWallpaper }) {
+export default function IPadOSDesktop({ 
+  isDark, 
+  onToggleTheme, 
+  openApps = [], 
+  onOpenApp, 
+  onCloseApp, 
+  currentWallpaper, 
+  onChangeWallpaper,
+  screenBrightness = 100,
+  onOpenSpotlight,
+  onOpenControlCenter
+}) {
   const [booted, setBooted] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
   const [activeApp, setActiveApp] = useState(null);
@@ -117,6 +128,12 @@ export default function IPadOSDesktop({ isDark, onToggleTheme, openApps = [], on
     <div className={`w-full h-full relative overflow-hidden select-none font-sans transition-colors duration-500 flex flex-col justify-between ${
       isDark ? 'glass-screen-purple text-white' : 'glass-screen-orange text-slate-900'
     }`}>
+      {/* Dynamic Display Brightness Dimming Overlay */}
+      <div 
+        className="absolute inset-0 bg-black pointer-events-none z-40 transition-opacity duration-300"
+        style={{ opacity: ((100 - screenBrightness) / 100) * 0.75 }}
+      />
+
       {/* Live Motion-Graphics Wallpaper Layer */}
       <LiveWallpaper wallpaperId={currentWallpaper} isDark={isDark} />
       <AnimatePresence>
@@ -179,7 +196,35 @@ export default function IPadOSDesktop({ isDark, onToggleTheme, openApps = [], on
                 <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{dateStr}</span>
               </div>
 
-              <div className="flex items-center space-x-2.5">
+              <div className="flex items-center space-x-2">
+                {/* Spotlight Search Trigger */}
+                <button
+                  onClick={() => {
+                    soundFx.playSpotlightChime?.();
+                    if (onOpenSpotlight) onOpenSpotlight();
+                  }}
+                  className={`p-1 rounded-md transition-colors ${
+                    isDark ? 'hover:bg-slate-800 text-slate-300 hover:text-purple-400' : 'hover:bg-orange-100 text-slate-700 hover:text-orange-600'
+                  }`}
+                  title="Spotlight Search"
+                >
+                  <Search size={12} />
+                </button>
+
+                {/* Control Center Trigger */}
+                <button
+                  onClick={() => {
+                    soundFx.playControlCenterOpen?.();
+                    if (onOpenControlCenter) onOpenControlCenter();
+                  }}
+                  className={`p-1 rounded-md transition-colors ${
+                    isDark ? 'hover:bg-slate-800 text-slate-300 hover:text-purple-400' : 'hover:bg-orange-100 text-slate-700 hover:text-orange-600'
+                  }`}
+                  title="Control Center"
+                >
+                  <Sliders size={12} />
+                </button>
+
                 <button onClick={toggleSound} title={isMuted ? "Unmute" : "Mute"}>
                   {isMuted ? <VolumeX size={13} className="text-rose-500" /> : <Volume2 size={13} />}
                 </button>

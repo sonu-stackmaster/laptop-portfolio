@@ -23,7 +23,15 @@ function createRoundedRectShape(width, height, radius) {
   return shape;
 }
 
-export default function IPhone3D({ isDark, onToggleTheme, currentWallpaper, onChangeWallpaper }) {
+export default function IPhone3D({ 
+  isDark, 
+  onToggleTheme, 
+  currentWallpaper, 
+  onChangeWallpaper,
+  screenBrightness = 100,
+  onOpenSpotlight,
+  onOpenControlCenter
+}) {
   const iphoneGroup = useRef();
 
   // Subtle floating & tilt motion
@@ -182,6 +190,9 @@ export default function IPhone3D({ isDark, onToggleTheme, currentWallpaper, onCh
           onToggleTheme={onToggleTheme}
           currentWallpaper={currentWallpaper}
           onChangeWallpaper={onChangeWallpaper}
+          screenBrightness={screenBrightness}
+          onOpenSpotlight={onOpenSpotlight}
+          onOpenControlCenter={onOpenControlCenter}
         />
       </Html>
 

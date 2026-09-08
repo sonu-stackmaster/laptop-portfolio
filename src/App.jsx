@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import LaptopStage from './components/Scene3D/LaptopStage';
 import FloatingCardsManager from './components/OuterCards/FloatingCardsManager';
+import SpotlightSearch from './components/Common/SpotlightSearch';
+import ControlCenterModal from './components/Common/ControlCenterModal';
 import { DEFAULT_WALLPAPER } from './components/Wallpapers/wallpaperConfig';
+import { soundFx } from './utils/audio';
 
 export default function App() {
   const [isDark, setIsDark] = useState(true);
   const [openApps, setOpenApps] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [isSpotlightOpen, setIsSpotlightOpen] = useState(false);
+  const [isControlCenterOpen, setIsControlCenterOpen] = useState(false);
+  const [screenBrightness, setScreenBrightness] = useState(100);
+  const [keyboardBrightness, setKeyboardBrightness] = useState(80);
+  const [isMuted, setIsMuted] = useState(false);
+
   const [currentWallpaper, setCurrentWallpaper] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('sonu_os_wallpaper');
@@ -31,6 +40,21 @@ export default function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Global ⌘K / Ctrl+K keyboard shortcut for Spotlight Search
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      const tag = e.target.tagName?.toLowerCase();
+      if (tag === 'input' || tag === 'textarea') return;
+
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsSpotlightOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
+
   const isMobile = viewportWidth < 640;
   const isTablet = viewportWidth >= 640 && viewportWidth < 1024;
   const isDesktop = viewportWidth >= 1024;
@@ -49,6 +73,12 @@ export default function App() {
 
   const handleToggleTheme = () => {
     setIsDark((prev) => !prev);
+  };
+
+  const handleToggleSound = () => {
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+    soundFx.setMuted(nextMuted);
   };
 
   const handleOpenApp = (appId) => {
@@ -78,6 +108,10 @@ export default function App() {
         isDesktop={isDesktop}
         currentWallpaper={currentWallpaper}
         onChangeWallpaper={handleChangeWallpaper}
+        screenBrightness={screenBrightness}
+        keyboardBrightness={keyboardBrightness}
+        onOpenSpotlight={() => setIsSpotlightOpen(true)}
+        onOpenControlCenter={() => setIsControlCenterOpen(true)}
       />
 
       {/* Floating Outer Glass Cards (Desktop only) */}
@@ -91,6 +125,32 @@ export default function App() {
           onChangeWallpaper={handleChangeWallpaper}
         />
       )}
+
+      {/* Universal Spotlight Search Modal (⌘K) */}
+      <SpotlightSearch
+        isOpen={isSpotlightOpen}
+        onClose={() => setIsSpotlightOpen(false)}
+        onOpenApp={handleOpenApp}
+        isDark={isDark}
+        onToggleTheme={handleToggleTheme}
+        onChangeWallpaper={handleChangeWallpaper}
+        isMuted={isMuted}
+        onToggleSound={handleToggleSound}
+      />
+
+      {/* macOS / iOS Control Center Modal */}
+      <ControlCenterModal
+        isOpen={isControlCenterOpen}
+        onClose={() => setIsControlCenterOpen(false)}
+        isDark={isDark}
+        onToggleTheme={handleToggleTheme}
+        isMuted={isMuted}
+        onToggleSound={handleToggleSound}
+        screenBrightness={screenBrightness}
+        onChangeScreenBrightness={setScreenBrightness}
+        keyboardBrightness={keyboardBrightness}
+        onChangeKeyboardBrightness={setKeyboardBrightness}
+      />
     </main>
   );
 }

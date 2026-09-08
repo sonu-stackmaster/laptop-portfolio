@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
   Sun, Moon, Volume2, VolumeX, Wifi, Battery, ChevronLeft, Terminal,
-  Phone, Compass, Sliders, Music, Notebook
+  Phone, Compass, Sliders, Music, Notebook, Search
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
@@ -44,7 +44,15 @@ const dockAppIcons = [
 
 const allApps = [...gridAppIcons, ...dockAppIcons];
 
-export default function MobileOSDesktop({ isDark, onToggleTheme, currentWallpaper, onChangeWallpaper }) {
+export default function MobileOSDesktop({ 
+  isDark, 
+  onToggleTheme, 
+  currentWallpaper, 
+  onChangeWallpaper,
+  screenBrightness = 100,
+  onOpenSpotlight,
+  onOpenControlCenter
+}) {
   const [booted, setBooted] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
   const [activeApp, setActiveApp] = useState(null);
@@ -104,21 +112,51 @@ export default function MobileOSDesktop({ isDark, onToggleTheme, currentWallpape
     <div className={`w-full h-full relative overflow-hidden select-none font-sans flex flex-col transition-colors duration-500 ${
       isDark ? 'glass-screen-purple text-white' : 'glass-screen-orange text-slate-900'
     }`}>
+      {/* Dynamic Display Brightness Dimming Overlay */}
+      <div 
+        className="absolute inset-0 bg-black pointer-events-none z-40 transition-opacity duration-300"
+        style={{ opacity: ((100 - screenBrightness) / 100) * 0.75 }}
+      />
+
       {/* Live Motion-Graphics Wallpaper Layer */}
       <LiveWallpaper wallpaperId={currentWallpaper} isDark={isDark} />
       {/* Dynamic Island & iOS Status Bar */}
-      <div className={`w-full px-4 pt-3 pb-2 flex items-center justify-between z-30 shrink-0 ${
+      <div className={`w-full px-3.5 pt-3 pb-2 flex items-center justify-between z-30 shrink-0 ${
         isDark ? 'text-slate-200' : 'text-slate-900'
       }`}>
         <span className="font-mono text-xs font-bold">{timeStr || '9:41'}</span>
         
         {/* Dynamic Island Notch */}
-        <div className="w-24 h-5 rounded-full bg-black flex items-center justify-between px-2.5 shadow-md">
+        <div className="w-22 h-5 rounded-full bg-black flex items-center justify-between px-2.5 shadow-md">
           <div className="w-2 h-2 rounded-full bg-blue-900 animate-pulse" />
           <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700" />
         </div>
 
         <div className="flex items-center space-x-2">
+          {/* Spotlight Search Trigger */}
+          <button 
+            onClick={() => {
+              soundFx.playSpotlightChime?.();
+              if (onOpenSpotlight) onOpenSpotlight();
+            }}
+            className="opacity-80 hover:opacity-100"
+            title="Spotlight Search"
+          >
+            <Search size={12} />
+          </button>
+
+          {/* Control Center Trigger */}
+          <button 
+            onClick={() => {
+              soundFx.playControlCenterOpen?.();
+              if (onOpenControlCenter) onOpenControlCenter();
+            }}
+            className="opacity-80 hover:opacity-100"
+            title="Control Center"
+          >
+            <Sliders size={12} />
+          </button>
+
           <button onClick={toggleSound} className="opacity-80 hover:opacity-100">
             {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
           </button>

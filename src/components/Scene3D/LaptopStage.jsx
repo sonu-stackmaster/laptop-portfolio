@@ -1,14 +1,50 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import * as THREE from 'three';
 import MacBook3D from './MacBook3D';
 import IPhone3D from './iPhone3D';
 import IPad3D from './iPad3D';
 
-export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp, onCloseApp, isMobile, isTablet, isDesktop, currentWallpaper, onChangeWallpaper }) {
+// Free OrbitControls allowing zoom in/out and 360-degree inspection without snapping/auto-fixing
+function FreeOrbitControls({ isMobile, isTablet }) {
+  const controlsRef = useRef();
+
+  return (
+    <OrbitControls
+      ref={controlsRef}
+      target={isMobile ? [0, 0, 0] : isTablet ? [0, 0.5, 0] : [0, 2.2, 0]}
+      enableZoom={true}
+      minDistance={isMobile ? 5 : isTablet ? 6 : 6}
+      maxDistance={isMobile ? 14 : isTablet ? 15 : 15}
+      minPolarAngle={isMobile ? Math.PI / 3 : Math.PI / 4}
+      maxPolarAngle={isMobile ? Math.PI / 1.9 : Math.PI / 2.05}
+      minAzimuthAngle={isMobile ? -Math.PI / 4 : -Math.PI / 4}
+      maxAzimuthAngle={isMobile ? Math.PI / 4 : Math.PI / 4}
+      enablePan={false}
+      rotateSpeed={0.6}
+    />
+  );
+}
+
+export default function LaptopStage({ 
+  isDark, 
+  onToggleTheme, 
+  openApps, 
+  onOpenApp, 
+  onCloseApp, 
+  isMobile, 
+  isTablet, 
+  isDesktop, 
+  currentWallpaper, 
+  onChangeWallpaper,
+  screenBrightness = 100,
+  keyboardBrightness = 80,
+  onOpenSpotlight,
+  onOpenControlCenter
+}) {
   const cameraPos = isMobile ? [0, 0, 9.5] : isTablet ? [0, 0.5, 11] : [0, 2.2, 13];
   const cameraFov = isMobile ? 42 : isTablet ? 40 : 38;
-  const targetPos = isMobile ? [0, 0, 0] : isTablet ? [0, 0, 0] : [0, 2.2, 0];
 
   return (
     <div className="relative w-full h-screen overflow-hidden select-none flex items-center justify-center">
@@ -54,6 +90,9 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
             onToggleTheme={onToggleTheme}
             currentWallpaper={currentWallpaper}
             onChangeWallpaper={onChangeWallpaper}
+            screenBrightness={screenBrightness}
+            onOpenSpotlight={onOpenSpotlight}
+            onOpenControlCenter={onOpenControlCenter}
           />
         ) : isTablet ? (
           <IPad3D
@@ -64,6 +103,9 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
             onCloseApp={onCloseApp}
             currentWallpaper={currentWallpaper}
             onChangeWallpaper={onChangeWallpaper}
+            screenBrightness={screenBrightness}
+            onOpenSpotlight={onOpenSpotlight}
+            onOpenControlCenter={onOpenControlCenter}
           />
         ) : (
           <MacBook3D
@@ -73,21 +115,17 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
             onOpenApp={onOpenApp}
             currentWallpaper={currentWallpaper}
             onChangeWallpaper={onChangeWallpaper}
+            screenBrightness={screenBrightness}
+            keyboardBrightness={keyboardBrightness}
+            onOpenSpotlight={onOpenSpotlight}
+            onOpenControlCenter={onOpenControlCenter}
           />
         )}
 
-        {/* Orbit Controls */}
-        <OrbitControls
-          target={targetPos}
-          enableZoom={true}
-          minDistance={isMobile ? 5 : isTablet ? 6 : 6}
-          maxDistance={isMobile ? 14 : isTablet ? 15 : 15}
-          minPolarAngle={isMobile ? Math.PI / 3 : Math.PI / 4}
-          maxPolarAngle={isMobile ? Math.PI / 1.9 : Math.PI / 2.05}
-          minAzimuthAngle={isMobile ? -Math.PI / 4 : -Math.PI / 3}
-          maxAzimuthAngle={isMobile ? Math.PI / 4 : Math.PI / 3}
-          enablePan={false}
-          rotateSpeed={0.6}
+        {/* Natural 3D Orbit Controls without auto-fixing */}
+        <FreeOrbitControls
+          isMobile={isMobile}
+          isTablet={isTablet}
         />
       </Canvas>
     </div>
