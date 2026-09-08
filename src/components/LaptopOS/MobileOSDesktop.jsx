@@ -20,6 +20,7 @@ import SettingsMobileApp from '../MobileCards/SettingsMobileApp';
 import MusicMobileApp from '../MobileCards/MusicMobileApp';
 import TerminalMobileApp from '../MobileCards/TerminalMobileApp';
 import NotesMobileApp from '../MobileCards/NotesMobileApp';
+import LiveWallpaper from '../Wallpapers/LiveWallpaper';
 
 // Grid apps (Portfolio Section Apps & Dev Tools)
 const gridAppIcons = [
@@ -43,7 +44,7 @@ const dockAppIcons = [
 
 const allApps = [...gridAppIcons, ...dockAppIcons];
 
-export default function MobileOSDesktop({ isDark, onToggleTheme }) {
+export default function MobileOSDesktop({ isDark, onToggleTheme, currentWallpaper, onChangeWallpaper }) {
   const [booted, setBooted] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
   const [activeApp, setActiveApp] = useState(null);
@@ -101,8 +102,10 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
 
   return (
     <div className={`w-full h-full relative overflow-hidden select-none font-sans flex flex-col transition-colors duration-500 ${
-      isDark ? 'bg-[#0b0718] text-white' : 'bg-[#fffaf3] text-slate-900'
+      isDark ? 'glass-screen-purple text-white' : 'glass-screen-orange text-slate-900'
     }`}>
+      {/* Live Motion-Graphics Wallpaper Layer */}
+      <LiveWallpaper wallpaperId={currentWallpaper} isDark={isDark} />
       {/* Dynamic Island & iOS Status Bar */}
       <div className={`w-full px-4 pt-3 pb-2 flex items-center justify-between z-30 shrink-0 ${
         isDark ? 'text-slate-200' : 'text-slate-900'
@@ -211,7 +214,9 @@ export default function MobileOSDesktop({ isDark, onToggleTheme }) {
                 isDark={isDark} 
                 onToggleTheme={onToggleTheme} 
                 isMuted={isMuted} 
-                onToggleSound={toggleSound} 
+                onToggleSound={toggleSound}
+                currentWallpaper={currentWallpaper}
+                onChangeWallpaper={onChangeWallpaper}
               />
             </div>
 

@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import LaptopStage from './components/Scene3D/LaptopStage';
 import FloatingCardsManager from './components/OuterCards/FloatingCardsManager';
+import { DEFAULT_WALLPAPER } from './components/Wallpapers/wallpaperConfig';
 
 export default function App() {
   const [isDark, setIsDark] = useState(true);
   const [openApps, setOpenApps] = useState([]);
   const [viewportWidth, setViewportWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const [currentWallpaper, setCurrentWallpaper] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sonu_os_wallpaper');
+      return saved || DEFAULT_WALLPAPER;
+    }
+    return DEFAULT_WALLPAPER;
+  });
+
+  const handleChangeWallpaper = (wallpaperId) => {
+    setCurrentWallpaper(wallpaperId);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sonu_os_wallpaper', wallpaperId);
+    }
+  };
 
   // Window resize handler for device breakpoint detection
   useEffect(() => {
@@ -61,6 +76,8 @@ export default function App() {
         isMobile={isMobile}
         isTablet={isTablet}
         isDesktop={isDesktop}
+        currentWallpaper={currentWallpaper}
+        onChangeWallpaper={handleChangeWallpaper}
       />
 
       {/* Floating Outer Glass Cards (Desktop only) */}
@@ -70,6 +87,8 @@ export default function App() {
           onCloseApp={handleCloseApp}
           isDark={isDark}
           onToggleTheme={handleToggleTheme}
+          currentWallpaper={currentWallpaper}
+          onChangeWallpaper={handleChangeWallpaper}
         />
       )}
     </main>

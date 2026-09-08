@@ -81,7 +81,7 @@ function MacBookKeyboard({ isDark }) {
   );
 }
 
-export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp }) {
+export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp, currentWallpaper, onChangeWallpaper }) {
   const macbookGroup = useRef();
 
   // Subtle float motion around origin
@@ -193,6 +193,8 @@ export default function MacBook3D({ isDark, onToggleTheme, openApps, onOpenApp }
             onToggleTheme={onToggleTheme}
             openApps={openApps}
             onOpenApp={onOpenApp}
+            currentWallpaper={currentWallpaper}
+            onChangeWallpaper={onChangeWallpaper}
           />
         </Html>
 

@@ -45,7 +45,7 @@ const fixedCardPositions = {
   notes: "top-12 right-16"
 };
 
-export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onToggleTheme }) {
+export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onToggleTheme, currentWallpaper, onChangeWallpaper }) {
   const containerRef = useRef(null);
   const [cardZIndexes, setCardZIndexes] = useState({});
   const [isMuted, setIsMuted] = useState(false);
@@ -151,6 +151,8 @@ export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onT
                   onToggleTheme={onToggleTheme}
                   isMuted={isMuted}
                   onToggleSound={handleToggleSound}
+                  currentWallpaper={currentWallpaper}
+                  onChangeWallpaper={onChangeWallpaper}
                 />
               </div>
             </motion.div>

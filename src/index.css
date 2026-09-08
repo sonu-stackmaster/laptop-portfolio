@@ -84,3 +84,92 @@
   );
   background-size: 100% 4px;
 }
+
+/* Live Wallpaper Animation Keyframes */
+@keyframes nebulaSpin {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes nebulaFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, 20px) scale(1.15); }
+}
+
+@keyframes nebulaPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0.75; }
+}
+
+@keyframes gridFlow {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 60px; }
+}
+
+@keyframes laserScan {
+  0% { top: 38%; opacity: 0.8; transform: scaleX(0.2); }
+  50% { opacity: 1; transform: scaleX(1); }
+  100% { top: 98%; opacity: 0; transform: scaleX(1.4); }
+}
+
+@keyframes waveSlow {
+  0%, 100% { transform: translateY(0px) scaleY(1); }
+  50% { transform: translateY(-20px) scaleY(1.08); }
+}
+
+@keyframes waveMedium {
+  0%, 100% { transform: translateY(0px) scaleY(1); }
+  50% { transform: translateY(18px) scaleY(0.94); }
+}
+
+@keyframes waveFast {
+  0%, 100% { transform: translateY(0px) scaleX(1); }
+  50% { transform: translateY(-12px) scaleX(1.05); }
+}
+
+@keyframes shardFloat1 {
+  0%, 100% { transform: rotate(25deg) translateY(0px); }
+  50% { transform: rotate(30deg) translateY(-14px); }
+}
+
+@keyframes shardFloat2 {
+  0%, 100% { transform: rotate(-35deg) translateY(0px); }
+  50% { transform: rotate(-28deg) translateY(16px); }
+}
+
+@keyframes shardFloat3 {
+  0%, 100% { transform: rotate(45deg) translateY(0px); }
+  50% { transform: rotate(50deg) translateY(-10px); }
+}
+
+@keyframes spinUltraSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes ambientBreathe1 {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+  50% { transform: scale(1.18) translate(25px, -15px); opacity: 0.9; }
+}
+
+@keyframes ambientBreathe2 {
+  0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.65; }
+  50% { transform: scale(1.15) translate(-20px, 20px); opacity: 0.85; }
+}
+
+.animate-nebula-spin { animation: nebulaSpin 24s linear infinite; }
+.animate-nebula-float { animation: nebulaFloat 16s ease-in-out infinite; }
+.animate-nebula-pulse { animation: nebulaPulse 12s ease-in-out infinite; }
+.animate-grid-flow { animation: gridFlow 3.5s linear infinite; }
+.animate-laser-scan { animation: laserScan 4s ease-in-out infinite; }
+.animate-wave-slow { animation: waveSlow 10s ease-in-out infinite; }
+.animate-wave-medium { animation: waveMedium 7s ease-in-out infinite; }
+.animate-wave-fast { animation: waveFast 5s ease-in-out infinite; }
+.animate-shard-float-1 { animation: shardFloat1 8s ease-in-out infinite; }
+.animate-shard-float-2 { animation: shardFloat2 9s ease-in-out infinite; }
+.animate-shard-float-3 { animation: shardFloat3 7s ease-in-out infinite; }
+.animate-spin-ultra-slow { animation: spinUltraSlow 45s linear infinite; }
+.animate-ambient-breathe-1 { animation: ambientBreathe1 10s ease-in-out infinite; }
+.animate-ambient-breathe-2 { animation: ambientBreathe2 12s ease-in-out infinite; }
+

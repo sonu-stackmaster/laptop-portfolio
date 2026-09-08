@@ -6,6 +6,7 @@ import {
   Compass, Sliders, Music, Notebook
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import LiveWallpaper from '../Wallpapers/LiveWallpaper';
 
 const appIcons = [
   { id: 'about', label: 'About Me', icon: User, color: 'from-purple-500 to-indigo-600', lightColor: 'from-purple-600 to-indigo-700' },
@@ -25,7 +26,7 @@ const dockApps = [
   { id: 'notes', label: 'Notes', icon: Notebook, color: 'from-amber-500 to-yellow-600', lightColor: 'from-amber-600 to-yellow-700' }
 ];
 
-export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }) {
+export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp, currentWallpaper }) {
   const [booted, setBooted] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
   const [timeStr, setTimeStr] = useState('');
@@ -76,8 +77,11 @@ export default function OSDesktop({ isDark, onToggleTheme, openApps, onOpenApp }
     <div className={`w-full h-full relative overflow-hidden select-none font-sans transition-colors duration-500 ${
       isDark ? 'glass-screen-purple text-white' : 'glass-screen-orange text-slate-900'
     }`}>
+      {/* Live Motion-Graphics Wallpaper Engine */}
+      <LiveWallpaper wallpaperId={currentWallpaper} isDark={isDark} />
+
       {/* Scanline texture (dark mode only) */}
-      {isDark && <div className="absolute inset-0 scanline pointer-events-none opacity-25 z-20" />}
+      {isDark && <div className="absolute inset-0 scanline pointer-events-none opacity-20 z-20" />}
 
       <AnimatePresence>
         {!booted ? (

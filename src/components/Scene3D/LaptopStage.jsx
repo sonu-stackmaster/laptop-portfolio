@@ -5,7 +5,7 @@ import MacBook3D from './MacBook3D';
 import IPhone3D from './iPhone3D';
 import IPad3D from './iPad3D';
 
-export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp, onCloseApp, isMobile, isTablet, isDesktop }) {
+export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp, onCloseApp, isMobile, isTablet, isDesktop, currentWallpaper, onChangeWallpaper }) {
   const cameraPos = isMobile ? [0, 0, 9.5] : isTablet ? [0, 0.5, 11] : [0, 2.2, 13];
   const cameraFov = isMobile ? 42 : isTablet ? 40 : 38;
   const targetPos = isMobile ? [0, 0, 0] : isTablet ? [0, 0, 0] : [0, 2.2, 0];
@@ -52,6 +52,8 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
           <IPhone3D
             isDark={isDark}
             onToggleTheme={onToggleTheme}
+            currentWallpaper={currentWallpaper}
+            onChangeWallpaper={onChangeWallpaper}
           />
         ) : isTablet ? (
           <IPad3D
@@ -60,6 +62,8 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
             openApps={openApps}
             onOpenApp={onOpenApp}
             onCloseApp={onCloseApp}
+            currentWallpaper={currentWallpaper}
+            onChangeWallpaper={onChangeWallpaper}
           />
         ) : (
           <MacBook3D
@@ -67,6 +71,8 @@ export default function LaptopStage({ isDark, onToggleTheme, openApps, onOpenApp
             onToggleTheme={onToggleTheme}
             openApps={openApps}
             onOpenApp={onOpenApp}
+            currentWallpaper={currentWallpaper}
+            onChangeWallpaper={onChangeWallpaper}
           />
         )}
 

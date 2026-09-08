@@ -23,7 +23,7 @@ function createRoundedRectShape(width, height, radius) {
   return shape;
 }
 
-export default function IPad3D({ isDark, onToggleTheme, openApps, onOpenApp, onCloseApp }) {
+export default function IPad3D({ isDark, onToggleTheme, openApps, onOpenApp, onCloseApp, currentWallpaper, onChangeWallpaper }) {
   const groupRef = useRef();
 
   // Subtle floating animation
@@ -118,6 +118,8 @@ export default function IPad3D({ isDark, onToggleTheme, openApps, onOpenApp, onC
           openApps={openApps}
           onOpenApp={onOpenApp}
           onCloseApp={onCloseApp}
+          currentWallpaper={currentWallpaper}
+          onChangeWallpaper={onChangeWallpaper}
         />
       </Html>
     </group>

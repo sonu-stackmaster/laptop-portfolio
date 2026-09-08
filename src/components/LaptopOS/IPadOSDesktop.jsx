@@ -18,6 +18,7 @@ import SafariiPadCard from '../iPadCards/SafariiPadCard';
 import SettingsiPadCard from '../iPadCards/SettingsiPadCard';
 import MusiciPadCard from '../iPadCards/MusiciPadCard';
 import NotesiPadCard from '../iPadCards/NotesiPadCard';
+import LiveWallpaper from '../Wallpapers/LiveWallpaper';
 
 const appRegistry = {
   about: { title: "About Me", subtitle: "DEVELOPER OVERVIEW", icon: User, color: "from-purple-500 to-indigo-600", Component: AboutiPadCard },
@@ -52,7 +53,7 @@ const dockApps = [
   { id: 'notes', label: 'Notes', icon: Notebook, color: 'from-amber-500 to-yellow-600' }
 ];
 
-export default function IPadOSDesktop({ isDark, onToggleTheme, openApps = [], onOpenApp, onCloseApp }) {
+export default function IPadOSDesktop({ isDark, onToggleTheme, openApps = [], onOpenApp, onCloseApp, currentWallpaper, onChangeWallpaper }) {
   const [booted, setBooted] = useState(false);
   const [bootProgress, setBootProgress] = useState(0);
   const [activeApp, setActiveApp] = useState(null);
@@ -116,6 +117,8 @@ export default function IPadOSDesktop({ isDark, onToggleTheme, openApps = [], on
     <div className={`w-full h-full relative overflow-hidden select-none font-sans transition-colors duration-500 flex flex-col justify-between ${
       isDark ? 'glass-screen-purple text-white' : 'glass-screen-orange text-slate-900'
     }`}>
+      {/* Live Motion-Graphics Wallpaper Layer */}
+      <LiveWallpaper wallpaperId={currentWallpaper} isDark={isDark} />
       <AnimatePresence>
         {!booted ? (
           /* iPadOS Boot Loader Screen */
@@ -222,7 +225,14 @@ export default function IPadOSDesktop({ isDark, onToggleTheme, openApps = [], on
 
                     {/* App Content */}
                     <div className="flex-1 p-3 overflow-y-auto">
-                      <ActiveComponent isDark={isDark} onToggleTheme={onToggleTheme} isMuted={isMuted} onToggleSound={toggleSound} />
+                      <ActiveComponent 
+                        isDark={isDark} 
+                        onToggleTheme={onToggleTheme} 
+                        isMuted={isMuted} 
+                        onToggleSound={toggleSound}
+                        currentWallpaper={currentWallpaper}
+                        onChangeWallpaper={onChangeWallpaper}
+                      />
                     </div>
                   </motion.div>
                 ) : (
