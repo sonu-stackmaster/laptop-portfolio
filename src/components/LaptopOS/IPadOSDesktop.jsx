@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
   Sun, Moon, Volume2, VolumeX, Wifi, Battery, Terminal, 
-  Compass, Sliders, Music, Notebook, ArrowLeft, X, Sparkles, Clock, Search
+  Compass, Sliders, Music, Notebook, ArrowLeft, X, Sparkles, Clock, Search,
+  Headphones, Coffee, StickyNote, Gamepad2
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import { soundscapes } from '../../utils/soundscapes';
 
 import AboutiPadCard from '../iPadCards/AboutiPadCard';
 import SkillsiPadCard from '../iPadCards/SkillsiPadCard';
@@ -20,6 +22,11 @@ import MusiciPadCard from '../iPadCards/MusiciPadCard';
 import NotesiPadCard from '../iPadCards/NotesiPadCard';
 import LiveWallpaper from '../Wallpapers/LiveWallpaper';
 
+import AmbientSoundscapeCard from '../Common/AmbientSoundscapeCard';
+import FocusTimerCard from '../Common/FocusTimerCard';
+import StickyNotesApp from '../Common/StickyNotesApp';
+import ArcadeMiniGame from '../Common/ArcadeMiniGame';
+
 const appRegistry = {
   about: { title: "About Me", subtitle: "DEVELOPER OVERVIEW", icon: User, color: "from-purple-500 to-indigo-600", Component: AboutiPadCard },
   skills: { title: "Technical Stack", subtitle: "SKILLS & TECHNOLOGIES", icon: Code2, color: "from-blue-500 to-cyan-600", Component: SkillsiPadCard },
@@ -31,7 +38,11 @@ const appRegistry = {
   safari: { title: "Safari Browser", subtitle: "WEB BOOKMARKS", icon: Compass, color: "from-blue-500 to-sky-600", Component: SafariiPadCard },
   settings: { title: "Settings", subtitle: "TABLET PREFERENCES", icon: Sliders, color: "from-slate-600 to-zinc-800", Component: SettingsiPadCard },
   music: { title: "Apple Music", subtitle: "LOFI BEATS", icon: Music, color: "from-rose-500 to-pink-600", Component: MusiciPadCard },
-  notes: { title: "Notes", subtitle: "TABLET STICKY NOTES", icon: Notebook, color: "from-amber-500 to-yellow-600", Component: NotesiPadCard }
+  notes: { title: "Notes", subtitle: "TABLET STICKY NOTES", icon: Notebook, color: "from-amber-500 to-yellow-600", Component: NotesiPadCard },
+  soundscapes: { title: "Soundscapes", subtitle: "COZY AMBIENT MIXER", icon: Headphones, color: "from-indigo-500 to-purple-600", Component: AmbientSoundscapeCard },
+  focus: { title: "Focus & Coffee", subtitle: "POMODORO & SIPS", icon: Coffee, color: "from-amber-600 to-orange-700", Component: FocusTimerCard },
+  stickies: { title: "Sticky Notes", subtitle: "COLORFUL DESK STICKIES", icon: StickyNote, color: "from-yellow-400 to-amber-500", Component: StickyNotesApp },
+  arcade: { title: "Cyber Arcade", subtitle: "RETRO MINI-GAMES", icon: Gamepad2, color: "from-emerald-400 to-cyan-600", Component: ArcadeMiniGame }
 };
 
 const homeGridApps = [
@@ -39,6 +50,10 @@ const homeGridApps = [
   { id: 'skills', label: 'Skills', icon: Code2, color: 'from-blue-500 to-cyan-600' },
   { id: 'projects', label: 'Projects', icon: FolderGit2, color: 'from-emerald-500 to-teal-600' },
   { id: 'experience', label: 'Experience', icon: Briefcase, color: 'from-amber-500 to-orange-600' },
+  { id: 'soundscapes', label: 'Soundscapes', icon: Headphones, color: 'from-indigo-500 to-purple-600' },
+  { id: 'focus', label: 'Focus & Sip', icon: Coffee, color: 'from-amber-600 to-orange-700' },
+  { id: 'stickies', label: 'Stickies', icon: StickyNote, color: 'from-yellow-400 to-amber-500' },
+  { id: 'arcade', label: 'Arcade', icon: Gamepad2, color: 'from-emerald-400 to-cyan-600' },
   { id: 'resume', label: 'Resume', icon: FileText, color: 'from-rose-500 to-pink-600' },
   { id: 'contact', label: 'Contact', icon: Mail, color: 'from-violet-500 to-purple-700' },
   { id: 'terminal', label: 'Terminal', icon: Terminal, color: 'from-gray-700 to-slate-900' },
@@ -47,10 +62,12 @@ const homeGridApps = [
 
 const dockApps = [
   { id: 'safari', label: 'Safari', icon: Compass, color: 'from-blue-500 to-sky-600' },
+  { id: 'soundscapes', label: 'Sounds', icon: Headphones, color: 'from-indigo-500 to-purple-600' },
+  { id: 'focus', label: 'Focus', icon: Coffee, color: 'from-amber-600 to-orange-700' },
   { id: 'terminal', label: 'Terminal', icon: Terminal, color: 'from-gray-700 to-slate-900' },
   { id: 'settings', label: 'Settings', icon: Sliders, color: 'from-slate-600 to-zinc-800' },
   { id: 'music', label: 'Music', icon: Music, color: 'from-rose-500 to-pink-600' },
-  { id: 'notes', label: 'Notes', icon: Notebook, color: 'from-amber-500 to-yellow-600' }
+  { id: 'arcade', label: 'Arcade', icon: Gamepad2, color: 'from-emerald-400 to-cyan-600' }
 ];
 
 export default function IPadOSDesktop({ 
@@ -71,6 +88,15 @@ export default function IPadOSDesktop({
   const [timeStr, setTimeStr] = useState('');
   const [dateStr, setDateStr] = useState('');
   const [isMuted, setIsMuted] = useState(false);
+  const [soundscapePlaying, setSoundscapePlaying] = useState(() => soundscapes.getState().isPlaying);
+
+  // Subscribe to procedural soundscape playback
+  useEffect(() => {
+    const unsub = soundscapes.subscribe((state) => {
+      setSoundscapePlaying(state.isPlaying);
+    });
+    return unsub;
+  }, []);
 
   // Boot sequence
   useEffect(() => {
@@ -194,6 +220,17 @@ export default function IPadOSDesktop({
               <div className="flex items-center space-x-2">
                 <span className="font-bold font-mono text-[11px]">{timeStr}</span>
                 <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{dateStr}</span>
+                {soundscapePlaying && (
+                  <button
+                    onClick={() => handleLaunchApp('soundscapes')}
+                    className="flex items-end space-x-0.5 h-3 px-1.5 py-0.5 rounded-full bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-colors"
+                    title="Ambient Soundscape Playing"
+                  >
+                    <span className="w-0.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-0.5 h-3 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-0.5 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </button>
+                )}
               </div>
 
               <div className="flex items-center space-x-2">

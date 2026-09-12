@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, User, Code2, FolderGit2, Briefcase, FileText, Mail, 
   Terminal, Compass, Sliders, Music, Notebook, Moon, Sun, 
-  Volume2, VolumeX, Sparkles, Download, ArrowRight, CornerDownLeft, X
+  Volume2, VolumeX, Sparkles, Download, ArrowRight, CornerDownLeft, X,
+  Coffee, Pin, Gamepad2, CloudRain, Flame, Wind
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import { soundscapes } from '../../utils/soundscapes';
 
 const ALL_SEARCH_ITEMS = [
   // Apps
@@ -14,14 +16,19 @@ const ALL_SEARCH_ITEMS = [
   { id: 'app-projects', type: 'App', title: 'Featured Projects', subtitle: 'Production systems & AI tools', icon: FolderGit2, action: (ctx) => ctx.openApp('projects') },
   { id: 'app-experience', type: 'App', title: 'Work Experience', subtitle: '4+ Years Career Timeline', icon: Briefcase, action: (ctx) => ctx.openApp('experience') },
   { id: 'app-resume', type: 'App', title: 'Verified Resume', subtitle: 'Experience, education & download', icon: FileText, action: (ctx) => ctx.openApp('resume') },
-  { id: 'app-contact', type: 'App', title: 'Get In Touch', subtitle: 'Email, LinkedIn & inquiries', icon: Mail, action: (ctx) => ctx.openApp('contact') },
+  { id: 'app-soundscapes', type: 'App', title: 'Ambient Soundscapes', subtitle: 'Procedural Rain, Fire & Lofi mixer', icon: CloudRain, action: (ctx) => ctx.openApp('soundscapes') },
+  { id: 'app-focus', type: 'App', title: 'Focus Flow & Coffee', subtitle: 'Pomodoro timer & steaming latte', icon: Coffee, action: (ctx) => ctx.openApp('focus') },
+  { id: 'app-stickies', type: 'App', title: 'Sticky Notes', subtitle: 'Pastel draggable notes & ideas', icon: Pin, action: (ctx) => ctx.openApp('stickies') },
+  { id: 'app-arcade', type: 'App', title: 'Retro Cyber Arcade', subtitle: '60 FPS Cyber Snake game', icon: Gamepad2, action: (ctx) => ctx.openApp('arcade') },
   { id: 'app-terminal', type: 'App', title: 'Terminal CLI', subtitle: 'Interactive developer console', icon: Terminal, action: (ctx) => ctx.openApp('terminal') },
   { id: 'app-safari', type: 'App', title: 'Safari Browser', subtitle: 'Case studies & bookmarks', icon: Compass, action: (ctx) => ctx.openApp('safari') },
   { id: 'app-settings', type: 'App', title: 'System Preferences', subtitle: 'Wallpapers, themes & specs', icon: Sliders, action: (ctx) => ctx.openApp('settings') },
   { id: 'app-music', type: 'App', title: 'Apple Music', subtitle: 'Focus Lofi audio player', icon: Music, action: (ctx) => ctx.openApp('music') },
   { id: 'app-notes', type: 'App', title: 'Notes App', subtitle: 'Developer scratchpad & notes', icon: Notebook, action: (ctx) => ctx.openApp('notes') },
 
-  // Quick Actions
+  // Quick Actions & Soundscapes
+  { id: 'act-ambient-rain', type: 'Sound', title: 'Play Ambient: Midnight Rain', subtitle: 'Soothing raindrops & Lofi piano', icon: CloudRain, action: () => soundscapes.applyPreset('midnight-rain') },
+  { id: 'act-ambient-fire', type: 'Sound', title: 'Play Ambient: Cozy Fireplace', subtitle: 'Warm hearth crackle & night air', icon: Flame, action: () => soundscapes.applyPreset('cozy-fireplace') },
   { id: 'act-resume-pdf', type: 'Action', title: 'Download Resume PDF', subtitle: 'Instant verified PDF export', icon: Download, action: (ctx) => ctx.downloadResume() },
   { id: 'act-dark-mode', type: 'Action', title: 'Enable Dark Mode', subtitle: 'Switch to Deep Purple palette', icon: Moon, action: (ctx) => { if (!ctx.isDark) ctx.toggleTheme(); } },
   { id: 'act-light-mode', type: 'Action', title: 'Enable Light Mode', subtitle: 'Switch to Warm Orange palette', icon: Sun, action: (ctx) => { if (ctx.isDark) ctx.toggleTheme(); } },
@@ -32,7 +39,16 @@ const ALL_SEARCH_ITEMS = [
   { id: 'act-mute', type: 'Action', title: 'Toggle Audio FX', subtitle: 'Mute or unmute system audio', icon: Volume2, action: (ctx) => ctx.toggleSound() }
 ];
 
-export default function SpotlightSearch({ isOpen, onClose, onOpenApp, isDark, onToggleTheme, onChangeWallpaper, isMuted, onToggleSound }) {
+export default function SpotlightSearch({ 
+  isOpen, 
+  onClose, 
+  onOpenApp, 
+  isDark, 
+  onToggleTheme, 
+  onChangeWallpaper, 
+  isMuted, 
+  onToggleSound 
+}) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);

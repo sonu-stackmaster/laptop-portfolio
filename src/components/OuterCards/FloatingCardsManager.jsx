@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
-import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail, Terminal, Compass, Sliders, Music, Notebook } from 'lucide-react';
+import { X, User, Code2, FolderGit2, Briefcase, FileText, Mail, Terminal, Compass, Sliders, Music, Notebook, Coffee, Pin, Gamepad2, CloudRain } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
 
 import AboutCard from './AboutCard';
@@ -15,6 +15,10 @@ import SafariDesktopCard from './SafariDesktopCard';
 import SettingsDesktopCard from './SettingsDesktopCard';
 import MusicDesktopCard from './MusicDesktopCard';
 import NotesDesktopCard from './NotesDesktopCard';
+import AmbientSoundscapeCard from '../Common/AmbientSoundscapeCard';
+import FocusTimerCard from '../Common/FocusTimerCard';
+import StickyNotesApp from '../Common/StickyNotesApp';
+import ArcadeMiniGame from '../Common/ArcadeMiniGame';
 
 const cardComponents = {
   about: { title: "About Me", subtitle: "DEVELOPER OVERVIEW", icon: User, Component: AboutCard },
@@ -27,22 +31,30 @@ const cardComponents = {
   safari: { title: "Safari Browser", subtitle: "WEB BOOKMARKS", icon: Compass, Component: SafariDesktopCard },
   settings: { title: "System Preferences", subtitle: "DESKTOP SETTINGS", icon: Sliders, Component: SettingsDesktopCard },
   music: { title: "Apple Music", subtitle: "DEV FOCUS LOFI", icon: Music, Component: MusicDesktopCard },
-  notes: { title: "Developer Notes", subtitle: "STICKY NOTES", icon: Notebook, Component: NotesDesktopCard }
+  notes: { title: "Developer Notes", subtitle: "STICKY NOTES", icon: Notebook, Component: NotesDesktopCard },
+  soundscapes: { title: "Ambient Soundscapes", subtitle: "PROCEDURAL LOFI MIXER", icon: CloudRain, Component: AmbientSoundscapeCard },
+  focus: { title: "Focus Flow & Coffee", subtitle: "POMODORO & COZY BREAK", icon: Coffee, Component: FocusTimerCard },
+  stickies: { title: "Sticky Notes", subtitle: "PASTEL SCRATCHPAD", icon: Pin, Component: StickyNotesApp },
+  arcade: { title: "Retro Cyber Arcade", subtitle: "60 FPS MINI-GAME", icon: Gamepad2, Component: ArcadeMiniGame }
 };
 
-// Fixed initial docking positions tied to each specific app ID
+// Fixed initial docking positions tied to each specific app ID (flank-anchored)
 const fixedCardPositions = {
   about: "left-4 sm:left-8 md:left-12 lg:left-16 top-10 sm:top-14",
   skills: "right-4 sm:right-8 md:right-12 lg:right-16 top-10 sm:top-14",
-  projects: "left-4 sm:left-10 lg:left-20 top-24 sm:top-28",
-  experience: "top-6 left-1/2 -translate-x-1/2",
-  resume: "right-4 sm:right-10 lg:right-20 top-24 sm:top-28",
-  contact: "top-12 left-1/2 -translate-x-1/2",
-  terminal: "top-12 left-1/2 -translate-x-1/2",
-  safari: "top-10 left-10",
-  settings: "top-14 right-10",
-  music: "top-16 left-1/2 -translate-x-1/2",
-  notes: "top-12 right-16"
+  projects: "left-4 sm:left-8 md:left-12 lg:left-16 top-20 sm:top-24",
+  experience: "right-4 sm:right-8 md:right-12 lg:right-16 top-20 sm:top-24",
+  resume: "right-4 sm:right-8 md:right-12 lg:right-16 top-12 sm:top-16",
+  contact: "left-4 sm:left-8 md:left-12 lg:left-16 top-16 sm:top-20",
+  terminal: "left-4 sm:left-8 md:left-12 lg:left-16 top-14 sm:top-18",
+  safari: "left-4 sm:left-8 md:left-12 lg:left-16 top-10 sm:top-14",
+  settings: "right-4 sm:right-8 md:right-12 lg:right-16 top-12 sm:top-16",
+  music: "right-4 sm:right-8 md:right-12 lg:right-16 top-14 sm:top-18",
+  notes: "right-4 sm:right-8 md:right-12 lg:right-16 top-16 sm:top-20",
+  soundscapes: "left-4 sm:left-8 md:left-12 lg:left-16 top-12 sm:top-16",
+  focus: "right-4 sm:right-8 md:right-12 lg:right-16 top-10 sm:top-14",
+  stickies: "left-4 sm:left-8 md:left-12 lg:left-16 top-16 sm:top-20",
+  arcade: "right-4 sm:right-8 md:right-12 lg:right-16 top-12 sm:top-16"
 };
 
 // Individual Floating Card with Header-Only Drag Trigger
@@ -147,7 +159,14 @@ function FloatingCardItem({
   );
 }
 
-export default function FloatingCardsManager({ openApps, onCloseApp, isDark, onToggleTheme, currentWallpaper, onChangeWallpaper }) {
+export default function FloatingCardsManager({ 
+  openApps, 
+  onCloseApp, 
+  isDark, 
+  onToggleTheme, 
+  currentWallpaper, 
+  onChangeWallpaper 
+}) {
   const containerRef = useRef(null);
   const [cardZIndexes, setCardZIndexes] = useState({});
   const [isMuted, setIsMuted] = useState(false);

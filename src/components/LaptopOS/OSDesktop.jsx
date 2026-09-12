@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
   Sun, Moon, Volume2, VolumeX, Wifi, Battery, Terminal,
-  Compass, Sliders, Music, Notebook, Search, Sparkles
+  Compass, Sliders, Music, Notebook, Search, Sparkles, CloudRain, Coffee, Pin, Gamepad2
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import { soundscapes } from '../../utils/soundscapes';
 import LiveWallpaper from '../Wallpapers/LiveWallpaper';
 
 const appIcons = [
@@ -40,6 +41,14 @@ export default function OSDesktop({
   const [bootProgress, setBootProgress] = useState(0);
   const [timeStr, setTimeStr] = useState('');
   const [isMuted, setIsMuted] = useState(false);
+  const [isSoundscapeActive, setIsSoundscapeActive] = useState(false);
+
+  useEffect(() => {
+    const unsub = soundscapes.subscribe((state) => {
+      setIsSoundscapeActive(state.isPlaying);
+    });
+    return unsub;
+  }, []);
 
   // Boot sequence animation on land
   useEffect(() => {
@@ -214,6 +223,27 @@ export default function OSDesktop({
                 >
                   <Sliders size={13} />
                 </button>
+
+                {/* Live Ambient Soundscape Equalizer */}
+                {isSoundscapeActive && (
+                  <button
+                    onClick={() => {
+                      soundFx.playKeyClick();
+                      onOpenApp('music');
+                    }}
+                    className="flex items-end space-x-0.5 h-3.5 px-1 hover:opacity-80 transition-opacity"
+                    title="Ambient Soundscape Playing"
+                  >
+                    {[3, 6, 4, 8].map((h, i) => (
+                      <motion.div
+                        key={i}
+                        className={`w-0.5 rounded-full ${isDark ? 'bg-purple-400' : 'bg-orange-600'}`}
+                        animate={{ height: [`${h * 1.2}px`, `${h * 2.2}px`, `${h * 0.8}px`] }}
+                        transition={{ duration: 0.5 + i * 0.1, repeat: Infinity, repeatType: 'reverse' }}
+                      />
+                    ))}
+                  </button>
+                )}
 
                 <button
                   onClick={toggleSound}

@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, Code2, FolderGit2, Briefcase, FileText, Mail, 
   Sun, Moon, Volume2, VolumeX, Wifi, Battery, ChevronLeft, Terminal,
-  Phone, Compass, Sliders, Music, Notebook, Search
+  Phone, Compass, Sliders, Music, Notebook, Search,
+  Headphones, Coffee, StickyNote, Gamepad2
 } from 'lucide-react';
 import { soundFx } from '../../utils/audio';
+import { soundscapes } from '../../utils/soundscapes';
 
 import AboutMobileCard from '../MobileCards/AboutMobileCard';
 import SkillsMobileCard from '../MobileCards/SkillsMobileCard';
@@ -22,12 +24,21 @@ import TerminalMobileApp from '../MobileCards/TerminalMobileApp';
 import NotesMobileApp from '../MobileCards/NotesMobileApp';
 import LiveWallpaper from '../Wallpapers/LiveWallpaper';
 
-// Grid apps (Portfolio Section Apps & Dev Tools)
+import AmbientSoundscapeCard from '../Common/AmbientSoundscapeCard';
+import FocusTimerCard from '../Common/FocusTimerCard';
+import StickyNotesApp from '../Common/StickyNotesApp';
+import ArcadeMiniGame from '../Common/ArcadeMiniGame';
+
+// Grid apps (Portfolio Section Apps & Dev Tools & Cozy Playful Apps)
 const gridAppIcons = [
   { id: 'about', label: 'About Me', icon: User, color: 'from-purple-500 to-indigo-600', lightColor: 'from-purple-600 to-indigo-700', Component: AboutMobileCard },
   { id: 'skills', label: 'Skills', icon: Code2, color: 'from-blue-500 to-cyan-600', lightColor: 'from-blue-600 to-cyan-700', Component: SkillsMobileCard },
   { id: 'projects', label: 'Projects', icon: FolderGit2, color: 'from-emerald-500 to-teal-600', lightColor: 'from-emerald-600 to-teal-700', Component: ProjectsMobileCard },
   { id: 'experience', label: 'Experience', icon: Briefcase, color: 'from-amber-500 to-orange-600', lightColor: 'from-amber-600 to-orange-700', Component: ExperienceMobileCard },
+  { id: 'soundscapes', label: 'Sounds', icon: Headphones, color: 'from-indigo-500 to-purple-600', lightColor: 'from-indigo-600 to-purple-700', Component: AmbientSoundscapeCard },
+  { id: 'focus', label: 'Focus & Sip', icon: Coffee, color: 'from-amber-600 to-orange-700', lightColor: 'from-amber-700 to-orange-800', Component: FocusTimerCard },
+  { id: 'stickies', label: 'Stickies', icon: StickyNote, color: 'from-yellow-400 to-amber-500', lightColor: 'from-yellow-500 to-amber-600', Component: StickyNotesApp },
+  { id: 'arcade', label: 'Arcade', icon: Gamepad2, color: 'from-emerald-400 to-cyan-600', lightColor: 'from-emerald-500 to-cyan-700', Component: ArcadeMiniGame },
   { id: 'resume', label: 'Resume', icon: FileText, color: 'from-rose-500 to-pink-600', lightColor: 'from-rose-600 to-pink-700', Component: ResumeMobileCard },
   { id: 'contact', label: 'Contact', icon: Mail, color: 'from-violet-500 to-purple-700', lightColor: 'from-violet-600 to-purple-800', Component: ContactMobileCard },
   { id: 'terminal', label: 'Terminal', icon: Terminal, color: 'from-gray-700 to-slate-900', lightColor: 'from-slate-800 to-zinc-900', Component: TerminalMobileApp },
@@ -58,6 +69,15 @@ export default function MobileOSDesktop({
   const [activeApp, setActiveApp] = useState(null);
   const [timeStr, setTimeStr] = useState('');
   const [isMuted, setIsMuted] = useState(false);
+  const [soundscapePlaying, setSoundscapePlaying] = useState(() => soundscapes.getState().isPlaying);
+
+  // Subscribe to soundscape playback
+  useEffect(() => {
+    const unsub = soundscapes.subscribe((state) => {
+      setSoundscapePlaying(state.isPlaying);
+    });
+    return unsub;
+  }, []);
 
   // Boot sequence
   useEffect(() => {
@@ -127,10 +147,30 @@ export default function MobileOSDesktop({
         <span className="font-mono text-xs font-bold">{timeStr || '9:41'}</span>
         
         {/* Dynamic Island Notch */}
-        <div className="w-22 h-5 rounded-full bg-black flex items-center justify-between px-2.5 shadow-md">
-          <div className="w-2 h-2 rounded-full bg-blue-900 animate-pulse" />
-          <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700" />
-        </div>
+        <button
+          onClick={() => handleOpenApp('soundscapes')}
+          className={`h-5 rounded-full bg-black flex items-center justify-between px-2.5 shadow-md transition-all ${
+            soundscapePlaying ? 'w-28 ring-1 ring-purple-500/50' : 'w-22'
+          }`}
+          title={soundscapePlaying ? "Now Playing: Ambient Soundscapes" : "Dynamic Island"}
+        >
+          {soundscapePlaying ? (
+            <>
+              <div className="flex items-end space-x-0.5 h-2.5">
+                <span className="w-0.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <span className="w-0.5 h-2.5 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <span className="w-0.5 h-2 bg-indigo-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+              <span className="text-[9px] font-mono text-purple-300 font-bold">Audio</span>
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            </>
+          ) : (
+            <>
+              <div className="w-2 h-2 rounded-full bg-blue-900 animate-pulse" />
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700" />
+            </>
+          )}
+        </button>
 
         <div className="flex items-center space-x-2">
           {/* Spotlight Search Trigger */}
